@@ -46,9 +46,8 @@ model Group {
   nextPayeeId Int?         @unique // References the next payee
   nextPayee   GroupMember? @relation("NextPayee", fields: [nextPayeeId], references: [id])
 
-  paymentPool            Float     @default(0.0) // The pool of funds from all users
-  paymentContractAddress String // The address of the smart contract managing the payments
-  token                  Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDC on Solana
+  groupContractAddress String // The address of the smart contract managing the payments
+  token                Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDC on Solana
 }
 
 model User {
@@ -71,7 +70,6 @@ model GroupMember {
   group   Group           @relation(fields: [groupId], references: [id])
   role    GroupMemberRole @default(MEMBER)
 
-  initialStakeTx      String // Transaction hash for the initial contribution
   contributions       Contribution[] // List of contributions per round
   memberWalletAddress String // The web3 wallet address linked to this group membership
 
