@@ -4,7 +4,11 @@
 
 html,
 body {
-  height: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  display: grid;
 }
 
 .wallet-adapter-button-trigger {
@@ -16,4 +20,18 @@ body {
 .wallet-adapter-dropdown-list,
 .wallet-adapter-button {
   font-family: inherit !important;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../public/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900; /* Adjust according to your font's weight range */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../public/fonts/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900; /* Adjust according to your font's weight range */
+  font-style: italic;
 }
