@@ -1,13 +1,9 @@
-import CardGroup from '@/components/CardGroup/CardGroup';
-import BodyLayout from '@/components/LayoutComponent/BodyLayout';
+'use client';
+import RoundGroups from '@/components/RoundGroups';
 import React from 'react';
 
 const page = () => {
-  return (
-    <BodyLayout title="Create New Group">
-      <CardGroup />
-    </BodyLayout>
-  );
+  return <RoundGroups />;
 };
 
 export default page;
