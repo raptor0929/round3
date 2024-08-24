@@ -3,6 +3,18 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { IGroup } from '@/types/types';
+import { Web3Token } from '@prisma/client';
+
+interface CreateGroupProps {
+  title: string;
+  description: string;
+  fundingAmount: number;
+  maximumMembers: number;
+  token: Web3Token;
+  paymentFrequency: 'WEEKLY' | 'MONTHLY';
+  isPublic: boolean;
+  startDate: Date | string;
+}
 
 export const useGroups = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
@@ -23,7 +35,6 @@ export const useGroups = () => {
         return;
       }
 
-      console.log('groups', response.data.groups);
       const fetchedGroups = response.data.groups.map((g: any) => g as IGroup);
 
       setGroups(fetchedGroups);
@@ -35,18 +46,21 @@ export const useGroups = () => {
     }
   };
 
-  const createGroup = async (group: IGroup) => {
+  const createGroup = async (props: CreateGroupProps) => {
     try {
       setLoading(true);
-      const response = await axios.post('/api/group', group);
+      const response = await axios.post('/api/group/create', props);
 
       if (response.status !== 201) {
-        setError('Failed to create group');
+        console.error('Failed to create group', response);
+        setError(`Failed to create group ${response.status}`);
         return;
       }
 
-      console.log('created group', response.data.group);
+      // optimistic update
       setGroups([...groups, response.data.group]);
+
+      await refetchGroups();
       setError(null);
     } catch (err) {
       setError('Failed to create group');

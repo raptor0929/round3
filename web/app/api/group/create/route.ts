@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server';
 import { createGroup } from '@/services/groupService';
+import { auth } from '@/auth';
 
 export async function POST(request: Request) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const {
       title,
@@ -9,11 +16,9 @@ export async function POST(request: Request) {
       maximumMembers,
       fundingAmount,
       paymentFrequency,
-      public: isPublic,
+      isPublic,
       startDate,
-      groupContractAddress,
       token,
-      groupPosition,
     } = await request.json();
 
     if (
@@ -21,8 +26,9 @@ export async function POST(request: Request) {
       !fundingAmount ||
       !maximumMembers ||
       !startDate ||
-      !groupContractAddress ||
-      !groupPosition
+      !paymentFrequency ||
+      !token ||
+      isPublic === undefined
     ) {
       return NextResponse.json(
         { error: 'Required fields are missing' },
@@ -37,11 +43,11 @@ export async function POST(request: Request) {
       fundingAmount,
       paymentFrequency,
       public: isPublic,
-      startDate,
-      groupContractAddress,
+      startDate: new Date(startDate),
+      groupContractAddress: '0x0', // TODO: Get contract address
       token,
-      groupPosition,
-      userId: '1', // TODO: Get user ID from session
+      groupPosition: 0,
+      userId,
     });
 
     return NextResponse.json({ group }, { status: 201 });

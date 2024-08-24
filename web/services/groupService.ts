@@ -66,6 +66,7 @@ export const getPublicGroups = async (): Promise<Group[]> => {
   return prisma.group.findMany({
     where: {
       public: true,
+      deletedAt: null,
     },
   });
 };
@@ -73,6 +74,7 @@ export const getPublicGroups = async (): Promise<Group[]> => {
 export const getGroupsForUser = async (userId: string): Promise<Group[]> => {
   return prisma.group.findMany({
     where: {
+      deletedAt: null,
       members: {
         some: {
           userId,
@@ -100,7 +102,7 @@ export const updateGroupNextPaymentDate = async (
 
 export const findGroupById = async (groupId: string) => {
   return await prisma.group.findUnique({
-    where: { id: groupId },
+    where: { id: groupId, deletedAt: null },
     include: { members: true }, // Include members if needed
   });
 };

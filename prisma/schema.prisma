@@ -25,7 +25,7 @@ enum PaymentFrequency {
 }
 
 enum Web3Token {
-  USDC
+  USDT
 }
 
 model User {
@@ -41,9 +41,10 @@ model User {
 }
 
 model Group {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft delete timestamp
 
   title            String
   description      String?
@@ -60,15 +61,16 @@ model Group {
   nextPayee   GroupMember? @relation("NextPayee", fields: [nextPayeeId], references: [id])
 
   groupContractAddress String // The address of the smart contract managing the payments
-  token                Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDC on Solana
+  token                Web3Token @default(USDT) // The token used for payments in this group, defaulting to USDT
 
   @@map("groups")
 }
 
 model GroupMember {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft delete timestamp
 
   userId  String
   groupId String

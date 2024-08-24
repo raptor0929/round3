@@ -30,7 +30,7 @@ export const GroupDetailProvider = ({
       setLoading(true);
       const response = await axios.get(`/api/group/${groupId}`);
 
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         console.error('Error in retrieving group:', response.data);
         setGroup(null);
         return;

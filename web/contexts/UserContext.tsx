@@ -24,13 +24,13 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     const address = publicKey?.toString();
 
-    const getUser = async () => {
+    const signIn = async () => {
       if (!address) {
         setUser(null);
         return;
       }
 
-      const response = await axios.post('/api/user', {
+      const response = await axios.post('/api/login', {
         walletAddress: address,
       });
 
@@ -40,12 +40,17 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         return;
       }
 
-      console.log('setting user', response.data.user);
-      setUser(response.data.user);
+      const { userId, walletAddress } = response.data.user;
+
+      setUser({
+        userId,
+        walletAddress,
+        memberships: [],
+      });
     };
 
     if (connected && address) {
-      getUser();
+      signIn();
     } else {
       setUser(null);
     }
