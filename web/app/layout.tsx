@@ -27,19 +27,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <form
-          action={async (formData) => {
-            'use server';
-            await signIn('credentials', formData);
-            await signOut();
-          }}
-        >
-          <label>
-            Wallet address
-            <input name="walletAddress" />
-          </label>
-          <button>Sign In</button>
-        </form>
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
