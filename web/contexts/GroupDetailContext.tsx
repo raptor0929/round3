@@ -2,10 +2,11 @@
 
 import axios from 'axios';
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { IRoundGroup } from '@/types/types';
+import { IGroup } from '@/types/types';
 
 export interface GroupDetailProviderContextType {
-  group: IRoundGroup | null;
+  group: IGroup | null;
+  loading: boolean;
 }
 
 interface GroupDetailProviderProps {
@@ -21,10 +22,12 @@ export const GroupDetailProvider = ({
   children,
   groupId,
 }: GroupDetailProviderProps) => {
-  const [group, setGroup] = useState<IRoundGroup | null>(null);
+  const [group, setGroup] = useState<IGroup | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getGroup = async () => {
+      setLoading(true);
       const response = await axios.get(`/api/group/${groupId}`);
 
       if (response.status !== 200) {
@@ -34,6 +37,7 @@ export const GroupDetailProvider = ({
       }
 
       setGroup(response.data.group);
+      setLoading(false);
     };
 
     if (groupId) {
@@ -43,6 +47,7 @@ export const GroupDetailProvider = ({
 
   const contextValue: GroupDetailProviderContextType = {
     group,
+    loading,
   };
 
   return (

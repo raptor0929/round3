@@ -3,7 +3,7 @@ export interface IMembers {
   position: number;
 }
 export interface IRoundGroup {
-  roundGroupId: string;
+  groupId: string;
   name: string;
   amount: number;
   numberOfMembers: number;
@@ -15,7 +15,25 @@ export interface IRoundGroup {
   status: 'RUNNING' | 'WAITING' | 'ENDING';
 }
 
+export interface IGroup {
+  id: string;
+  title: string;
+  description: string | null;
+  members: IGroupMembership[];
+  maximumMembers: number;
+  fundingAmount: number;
+  nextPaymentDate: string;
+  paymentFrequency: 'MONTHLY' | 'WEEKLY';
+  public: boolean;
+  status: 'ACTIVE' | 'PENDING' | 'COMPLETED';
+  startDate: string;
+  nextPayee?: IGroupMembership;
+  groupContractAddress: string;
+  token: 'USDT' | 'BTC' | 'SOL';
+}
+
 export interface IGroupMembership {
+  id: string;
   groupId: string;
   userId: string;
   role: 'ADMIN' | 'MEMBER';
