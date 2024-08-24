@@ -45,7 +45,7 @@ export const useContributions = (groupId: string) => {
   useEffect(() => {
     console.log('fetching Group contributions...');
     fetchGroupContributions();
-  });
+  }, [fetchGroupContributions]);
 
   return { makePayment, groupContributions };
 };
