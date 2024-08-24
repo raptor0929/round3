@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GroupStatus {
+  ACTIVE
+  PENDING
+  COMPLETED
+}
+
+enum GroupMemberRole {
+  MEMBER
+  ADMIN
+}
+
+enum PaymentFrequency {
+  WEEKLY
+  MONTHLY
+}
+
+enum Web3Token {
+  USDC
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title            String
+  description      String?
+  members          GroupMember[]
+  maximumMembers   Int
+  fundingAmount    Float // The fixed amount for each round
+  nextPaymentDate  DateTime
+  paymentFrequency PaymentFrequency @default(MONTHLY)
+  public           Boolean          @default(false)
+  status           GroupStatus      @default(PENDING)
+  startDate        DateTime
+
+  nextPayeeId Int?         @unique // References the next payee
+  nextPayee   GroupMember? @relation("NextPayee", fields: [nextPayeeId], references: [id])
+
+  paymentPool            Float     @default(0.0) // The pool of funds from all users
+  paymentContractAddress String // The address of the smart contract managing the payments
+  token                  Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDC on Solana
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  walletAddress String        @unique // The web3 wallet address used for login
+  groups        GroupMember[]
+}
+
+model GroupMember {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  Int
+  groupId Int
+  user    User            @relation(fields: [userId], references: [id])
+  group   Group           @relation(fields: [groupId], references: [id])
+  role    GroupMemberRole @default(MEMBER)
+
+  initialStakeTx      String // Transaction hash for the initial contribution
+  contributions       Contribution[] // List of contributions per round
+  memberWalletAddress String // The web3 wallet address linked to this group membership
+
+  nextPayeeForGroup Group? @relation("NextPayee") // Opposite side of the NextPayee relation, one-to-one
+}
+
+model Contribution {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  amount          Float
+  transactionHash String // Transaction hash from Solana smart contract
+  groupMemberId   Int
+  groupMember     GroupMember @relation(fields: [groupMemberId], references: [id])
+}
