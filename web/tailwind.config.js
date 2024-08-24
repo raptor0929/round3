@@ -16,7 +16,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['"Inter"', 'sans-serif'],
+        sans: ['Nunito', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
       colors: {
         primary: '#0F5BA7', // Primary color

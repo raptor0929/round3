@@ -20,6 +20,15 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/new-group',
+        permanent: true, // Use `false` if you want a temporary redirect (302)
+      },
+    ];
+  },
 };
 
 const plugins = [

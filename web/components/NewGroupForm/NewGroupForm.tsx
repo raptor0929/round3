@@ -79,7 +79,7 @@ const NewGroupForm = () => {
 
   return (
     <div className="flex w-full p-2 h-full gap-4">
-      <div className="relative h-full w-1/2  ">
+      <div className="relative h-full w-1/2 ">
         <div
           className="absolute w-full h-full p-14  bg-no-repeat bg-cover rounded-lg"
           style={{
@@ -87,36 +87,41 @@ const NewGroupForm = () => {
             filter: 'blur(4px)',
           }}
         ></div>
-        <div className="relative flex flex-col p-24 w-full gap-10 justify-center h-full">
-          <h2 className="text-7xl h-1/4 font-inter font-bold ">New Round</h2>
-          <div className="flex gap-2 items-center flex-wrap justify-center h-2/4">
+        <div className="relative flex flex-col px-10 w-full gap-1 justify-center h-full">
+          <h2 className="text-7xl h-1/5 font-bold font-sans flex items-center">
+            New Round
+          </h2>
+          <div className="flex gap-2 items-center flex-wrap justify-center h-4/5">
             {[...Array(Number(numberOfMembers) || 0)].map((_, index) => (
               <Avatar
                 key={index}
                 src={`https://i.pravatar.cc/150?u=a04258114e29026708c${index}`}
-                className="w-20 h-20 m-2 bg-white border-solid border-3 border-background"
+                className="w-17 h-17 m-2 bg-white border-solid border-3 border-background"
               />
             ))}
           </div>
         </div>
       </div>
-      <div className="bg-white h-full w-1/2 p-20 gap-2 rounded-lg grid grid-cols-2">
-        <span className="text-black">Name of the group:</span>
+      <div className="bg-white h-full w-1/2 py-24 px-28 rounded-lg grid grid-cols-2">
+        {/* <span className="text-black text-xl font-sans">Name of the group:</span> */}
         <Input
           type="text"
           label="Name of the group"
+          className="grid-cols-2 col-span-2 "
           value={nameOfGroup}
           onChange={handleNameChange}
         />
-        <span className="text-black">Funding Amount:</span>
+
+        {/* <span className="text-black text-xl font-sans">Funding Amount:</span> */}
         <Input
           type="number"
           label="Founding amount"
+          className="grid-cols-2 col-span-2 "
           value={foundingAmount}
           onChange={handleFoundingAmountChange}
         />
 
-        <span className="text-black">Number of Members:</span>
+        <span className="text-black text-xl font-sans">Number of Members:</span>
         <Dropdown>
           <DropdownTrigger>
             <Button variant="bordered" className="capitalize">
@@ -139,7 +144,7 @@ const NewGroupForm = () => {
           </DropdownMenu>
         </Dropdown>
 
-        <span className="text-black">Payment Frequency:</span>
+        <span className="text-black text-xl font-sans">Payment Frequency:</span>
         <Dropdown>
           <DropdownTrigger>
             <Button variant="bordered" className="capitalize">
@@ -161,17 +166,17 @@ const NewGroupForm = () => {
 
         <div className="h-full  gap-2 rounded-lg grid grid-cols-2 col-span-2">
           <div className="flex gap-2 items-center">
-            <span> Visibility:</span>
+            <span className="text-black text-xl font-sans"> Visibility:</span>
             <Switch
               defaultSelected={isPublic}
               onChange={(e) => handleTypeOfGroupChange(e.target.checked)}
             />
-            <span className="text-black">
+            <span className="text-black text-lg font-sans">
               {isPublic ? 'Public' : 'Private'}
             </span>
           </div>
           <div className="flex gap-2 items-center ">
-            <span className="text-black">Token</span>
+            <span className="text-black text-xl font-sans">Token:</span>
             <Dropdown className="w-full">
               <DropdownTrigger>
                 <Button variant="bordered" className="capitalize">
@@ -193,26 +198,17 @@ const NewGroupForm = () => {
           </div>
         </div>
 
-        {/* <span className="text-black">Start date</span>
-      <DateInput
-        label="Start Date"
-        isDisabled={false}
-        value={startDate}
-        onChange={handleStartDateChange}
-        placeholderValue={new CalendarDate(1995, 11, 6)}
-      /> */}
-
-        <span className="text-black">Description</span>
+        {/* <span className="text-black">Description</span> */}
         <Textarea
           label="Description"
-          placeholder="Enter your description"
           value={description}
           onChange={handleDescriptionChange}
+          className="grid-cols-2 col-span-2 items-center justify-center"
         />
-        <div className="col-span-2  flex items-center">
+        <div className="col-span-2 flex items-center ">
           <Button
             onPress={onOpen}
-            className="w-full bg-primaryOutline text-white"
+            className="w-full bg-primaryOutline text-white py-6"
           >
             Create Round
           </Button>
