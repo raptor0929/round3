@@ -27,21 +27,32 @@ export interface IGroup {
   public: boolean;
   status: 'ACTIVE' | 'PENDING' | 'COMPLETED';
   startDate: string;
-  nextPayee?: IGroupMembership;
+  nextPayee?: string; // IGroupMembership.id
   groupContractAddress: string;
   token: 'USDT' | 'BTC' | 'SOL';
 }
 
 export interface IGroupMembership {
   id: string;
-  groupId: string;
+  createdAt: Date;
+  updatedAt: Date;
   userId: string;
-  role: 'ADMIN' | 'MEMBER';
-  position: number;
+  groupId: string;
+  role: 'MEMBER' | 'ADMIN';
+  groupPosition: number;
+  contributions: IContribution[];
 }
 
 export interface IUser {
   userId: string;
   walletAddress: string;
   memberships: IGroupMembership[];
+}
+
+export interface IContribution {
+  id: string;
+  createdAt: Date;
+  amount: number;
+  transactionHash: string;
+  groupMemberId: string;
 }

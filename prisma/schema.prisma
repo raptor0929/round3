@@ -79,6 +79,7 @@ model GroupMember {
   role    GroupMemberRole @default(MEMBER)
 
   contributions Contribution[] // List of contributions per round
+  amountOwed    Float          @default(0) // The amount owed by the member
 
   nextPayeeForGroup Group? @relation("NextPayee") // Opposite side of the NextPayee relation, one-to-one
 

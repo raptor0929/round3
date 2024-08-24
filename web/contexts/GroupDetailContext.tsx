@@ -8,11 +8,16 @@ import {
   useState,
   useCallback,
 } from 'react';
-import { IGroup } from '@/types/types';
+import { IContribution, IGroup, IGroupMembership } from '@/types/types';
+import { useContributions } from '@/hooks/useContributions';
+import { useMembership } from '@/hooks/useMembership';
 
 export interface GroupDetailProviderContextType {
   group: IGroup | null;
   loading: boolean;
+  membership: IGroupMembership | null;
+  groupContributions: IContribution[];
+  makePayment: (amount: number) => Promise<void>;
 }
 
 interface GroupDetailProviderProps {
@@ -30,6 +35,9 @@ export const GroupDetailProvider = ({
 }: GroupDetailProviderProps) => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const { makePayment, groupContributions } = useContributions(groupId);
+  const { membership } = useMembership(groupId);
 
   const getGroup = useCallback(async () => {
     if (!groupId) return;
@@ -59,6 +67,10 @@ export const GroupDetailProvider = ({
   const contextValue: GroupDetailProviderContextType = {
     group,
     loading,
+    membership,
+    groupContributions,
+
+    makePayment,
   };
 
   return (
