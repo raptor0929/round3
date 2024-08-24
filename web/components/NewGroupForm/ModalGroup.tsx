@@ -8,6 +8,7 @@ import {
   Button,
 } from '@nextui-org/react';
 import Link from 'next/link';
+import { useGroups } from '@/hooks/useGroups';
 
 interface ModalGroupProps {
   isOpen: boolean;
@@ -15,9 +16,9 @@ interface ModalGroupProps {
   groupName: string;
   description: string;
   numberOfMembers: string;
-  foundingAmount: string;
-  paymentFrequency: string;
-  typeOfGroup: string;
+  fundingAmount: string;
+  paymentFrequency: 'WEEKLY' | 'MONTHLY';
+  isPublic: boolean;
   startDate: string;
   token: string;
 }
@@ -28,14 +29,25 @@ export default function ModalGroup({
   groupName,
   description,
   numberOfMembers,
-  foundingAmount,
+  fundingAmount,
   paymentFrequency,
-  typeOfGroup,
+  isPublic,
   startDate,
   token,
 }: ModalGroupProps) {
+  const { createGroup } = useGroups();
   const handleSubmitData = () => {
-    onClose();
+    createGroup({
+      title: groupName,
+      description: description,
+      fundingAmount: Number(fundingAmount),
+      maximumMembers: Number(numberOfMembers),
+      token: token,
+      paymentFrequency: paymentFrequency,
+      isPublic: isPublic,
+      startDate: startDate,
+    });
+    // onOpenChange();
   };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -56,13 +68,14 @@ export default function ModalGroup({
                 <strong>Number of Members:</strong> {numberOfMembers}
               </p>
               <p>
-                <strong>Founding Amount:</strong> {foundingAmount}
+                <strong>Founding Amount:</strong> {fundingAmount}
               </p>
               <p>
                 <strong>Payment Frequency:</strong> {paymentFrequency}
               </p>
               <p>
-                <strong>Type of Group:</strong> {typeOfGroup}
+                <strong>Type of Group:</strong>{' '}
+                {isPublic ? 'Public' : 'Private'}
               </p>
               <p>
                 <strong>Start Date:</strong> {startDate}
@@ -79,6 +92,7 @@ export default function ModalGroup({
               <Button
                 color="primary"
                 onPress={() => {
+                  handleSubmitData();
                   onClose();
                 }}
               >

@@ -22,8 +22,11 @@ const NewGroupForm = () => {
   const [description, setDescription] = useState('');
   const [numberOfMembers, setNumberOfMembers] = useState('2');
   const [foundingAmount, setFoundingAmount] = useState('');
-  const [paymentFrequency, setPaymentFrequency] = useState('Monthly');
-  const [typeOfGroup, setTypeOfGroup] = useState('Private');
+  const [paymentFrequency, setPaymentFrequency] = useState<
+    'WEEKLY' | 'MONTHLY'
+  >('MONTHLY');
+
+  const [isPublic, setIsPublic] = useState(true);
   const [startDate, setStartDate] = useState(parseDate('2024-04-04'));
   const [token, setToken] = useState('');
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
@@ -57,7 +60,7 @@ const NewGroupForm = () => {
   };
 
   const handleTypeOfGroupChange = (isPublic: boolean) => {
-    setTypeOfGroup(isPublic ? 'Public' : 'Private');
+    setIsPublic(isPublic);
   };
 
   const handleStartDateChange = (date: CalendarDate) => {
@@ -142,16 +145,18 @@ const NewGroupForm = () => {
             selectedKeys={paymentFrequency}
             onSelectionChange={handlePaymentFrequencyChange}
           >
-            <DropdownItem key="Monthly">Monthly</DropdownItem>
-            <DropdownItem key="Weekly">Weekly</DropdownItem>
+            <DropdownItem key="MONTHLY">MONTHLY</DropdownItem>
+            <DropdownItem key="WEEKLY">WEEKLY</DropdownItem>
           </DropdownMenu>
         </Dropdown>
 
         <div className="h-full  gap-2 rounded-lg grid grid-cols-2 col-span-2">
           <div className="flex gap-2 items-center">
-            <span className="text-black">Public or Private</span>
+            <span className="text-black">
+              Visibility: {isPublic ? 'Public' : 'Private'}
+            </span>
             <Switch
-              defaultSelected={typeOfGroup === 'Public'}
+              defaultSelected={isPublic}
               onChange={(e) => handleTypeOfGroupChange(e.target.checked)}
             />
           </div>
@@ -206,9 +211,9 @@ const NewGroupForm = () => {
           groupName={nameOfGroup}
           description={description}
           numberOfMembers={numberOfMembers}
-          foundingAmount={foundingAmount}
+          fundingAmount={foundingAmount}
           paymentFrequency={paymentFrequency}
-          typeOfGroup={typeOfGroup}
+          isPublic={isPublic}
           startDate={startDate.toString()} // Convert CalendarDate to string
           token={token}
         />
