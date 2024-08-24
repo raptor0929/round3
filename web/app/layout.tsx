@@ -3,6 +3,8 @@ import { UiLayout } from '@/components/ui/ui-layout';
 import { ClusterProvider } from '@/components/cluster/cluster-data-access';
 import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
+import { NextUIProvider } from '@nextui-org/react';
+import LayoutComponent from '@/components/LayoutComponent';
 
 export const metadata = {
   title: 'round3',
@@ -26,7 +28,10 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>
-              <UiLayout links={links}>{children}</UiLayout>
+              <NextUIProvider>
+                {/* <UiLayout links={links}>{children}</UiLayout> */}
+                <LayoutComponent>{children}</LayoutComponent>
+              </NextUIProvider>
             </SolanaProvider>
           </ClusterProvider>
         </ReactQueryProvider>
