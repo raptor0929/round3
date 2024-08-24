@@ -75,8 +75,7 @@ model GroupMember {
   group   Group           @relation(fields: [groupId], references: [id])
   role    GroupMemberRole @default(MEMBER)
 
-  contributions       Contribution[] // List of contributions per round
-  memberWalletAddress String // The web3 wallet address linked to this group membership
+  contributions Contribution[] // List of contributions per round
 
   nextPayeeForGroup Group? @relation("NextPayee") // Opposite side of the NextPayee relation, one-to-one
 
