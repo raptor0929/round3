@@ -14,3 +14,16 @@ export interface IRoundGroup {
   members: IMembers[];
   status: 'RUNNING' | 'WAITING' | 'ENDING';
 }
+
+export interface IGroupMembership {
+  groupId: string;
+  userId: string;
+  role: 'ADMIN' | 'MEMBER';
+  position: number;
+}
+
+export interface IUser {
+  userId: string;
+  walletAddress: string;
+  memberships: IGroupMembership[];
+}
