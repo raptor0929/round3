@@ -1,8 +1,8 @@
-import BodyLayout from '@/components/LayoutComponent/BodyLayout';
+import RoundGroups from '@/components/RoundGroups';
 import React from 'react';
 
 const page = () => {
-  return <BodyLayout title="Your Groups">hola 3</BodyLayout>;
+  return <RoundGroups />;
 };
 
 export default page;
