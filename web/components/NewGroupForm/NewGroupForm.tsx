@@ -1,34 +1,97 @@
+import { CalendarDate, parseDate } from '@internationalized/date';
 import {
   Button,
+  DateInput,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
   Input,
+  Switch,
   Textarea,
+  useDisclosure,
 } from '@nextui-org/react';
-import React from 'react';
+import React, { useState } from 'react';
+import ModalGroup from './ModalGroup';
 
 const NewGroupForm = () => {
-  const [selectedKeys, setSelectedKeys] = React.useState('1');
+  const [nameOfGroup, setNameOfGroup] = useState('');
+  const [description, setDescription] = useState('');
+  const [numberOfMembers, setNumberOfMembers] = useState('');
+  const [foundingAmount, setFoundingAmount] = useState('');
+  const [paymentFrequency, setPaymentFrequency] = useState('');
+  const [typeOfGroup, setTypeOfGroup] = useState('Private');
+  const [startDate, setStartDate] = useState(parseDate('2024-04-04'));
+  const [token, setToken] = useState('');
+  const { onOpen, isOpen, onOpenChange } = useDisclosure();
 
-  const selectedValue = React.useMemo(
-    () => Array.from(selectedKeys).join(', ').replaceAll('_', ' '),
-    [selectedKeys]
-  );
+  const array = Array(12).fill(null);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNameOfGroup(e.target.value);
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setDescription(e.target.value);
+  };
+
+  const handleNumberOfMembersChange = (keys: React.Key[]) => {
+    const selectedKey = Array.from(keys).join('');
+    setNumberOfMembers(selectedKey);
+  };
+
+  const handleFoundingAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFoundingAmount(e.target.value);
+  };
+
+  const handlePaymentFrequencyChange = (keys: React.Key[]) => {
+    const selectedKey = Array.from(keys).join('');
+    setPaymentFrequency(selectedKey);
+  };
+
+  const handleTypeOfGroupChange = (isPublic: boolean) => {
+    setTypeOfGroup(isPublic ? 'Public' : 'Private');
+  };
+
+  const handleStartDateChange = (date: CalendarDate) => {
+    setStartDate(date);
+  };
+
+  const handleTokenChange = (keys: React.Key[]) => {
+    const selectedKey = Array.from(keys).join('');
+    setToken(selectedKey);
+  };
+
+  const handleSubmitInformation = () => {
+    // Handle form submission logic here
+  };
 
   return (
-    <div className="bg-white h-full p-10 flex gap-2 rounded-lg">
-      <Input type="title" label="Name of the group" />
-      <Textarea
-        label="Description"
-        placeholder="Enter your description"
-        className="max-w-xs"
+    <div className="bg-white h-full p-20 gap-2 rounded-lg grid grid-cols-2">
+      <span className="text-black">Name of the group:</span>
+      <Input
+        type="text"
+        label="Name of the group"
+        value={nameOfGroup}
+        onChange={handleNameChange}
       />
+      <span className="text-black">Founding Amount</span>
+      <Input
+        type="number"
+        label="Founding amount"
+        value={foundingAmount}
+        onChange={handleFoundingAmountChange}
+      />
+
+      <span className="text-black">Number of Members:</span>
       <Dropdown>
         <DropdownTrigger>
           <Button variant="bordered" className="capitalize">
-            {selectedValue}
+            {numberOfMembers || 'Select'}
           </Button>
         </DropdownTrigger>
         <DropdownMenu
@@ -36,13 +99,100 @@ const NewGroupForm = () => {
           variant="flat"
           disallowEmptySelection
           selectionMode="single"
-          selectedKeys={selectedKeys}
+          selectedKeys={numberOfMembers}
+          onSelectionChange={handleNumberOfMembersChange}
         >
-          <DropdownItem key="1">1</DropdownItem>
-          <DropdownItem key="2">2</DropdownItem>
-          <DropdownItem key="3">3</DropdownItem>
+          {array.map((_, index) => {
+            return <DropdownItem key={index + 1}>{index + 1}</DropdownItem>;
+          })}
         </DropdownMenu>
       </Dropdown>
+
+      <span className="text-black">Payment Frequency</span>
+      <Dropdown>
+        <DropdownTrigger>
+          <Button variant="bordered" className="capitalize">
+            {paymentFrequency || 'Select'}
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Single selection example"
+          variant="flat"
+          disallowEmptySelection
+          selectionMode="single"
+          selectedKeys={paymentFrequency}
+          onSelectionChange={handlePaymentFrequencyChange}
+        >
+          <DropdownItem key="Monthly">Monthly</DropdownItem>
+          <DropdownItem key="Weekly">Weekly</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+
+      <div className="h-full  gap-2 rounded-lg grid grid-cols-2 col-span-2">
+        <div className="flex gap-2 items-center">
+          <span className="text-black">Public or Private</span>
+          <Switch
+            defaultSelected={typeOfGroup === 'Public'}
+            onChange={(e) => handleTypeOfGroupChange(e.target.checked)}
+          />
+        </div>
+        <div className="flex gap-2 items-center ">
+          <span className="text-black">Token</span>
+          <Dropdown className="w-full">
+            <DropdownTrigger>
+              <Button variant="bordered" className="capitalize">
+                {token || 'Select'}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Single selection example"
+              variant="flat"
+              disallowEmptySelection
+              selectionMode="single"
+              selectedKeys={token}
+              onSelectionChange={handleTokenChange}
+            >
+              <DropdownItem key="USDT">USDT</DropdownItem>
+              <DropdownItem key="BTC">BTC</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      </div>
+
+      {/* <span className="text-black">Start date</span>
+      <DateInput
+        label="Start Date"
+        isDisabled={false}
+        value={startDate}
+        onChange={handleStartDateChange}
+        placeholderValue={new CalendarDate(1995, 11, 6)}
+      /> */}
+
+      <span className="text-black">Description</span>
+      <Textarea
+        label="Description"
+        placeholder="Enter your description"
+        value={description}
+        onChange={handleDescriptionChange}
+      />
+      <div className="col-span-1 "></div>
+      <div className="col-span-1  flex items-center">
+        <Button color="primary" onPress={onOpen} className="w-full">
+          Create Group
+        </Button>
+      </div>
+      <ModalGroup
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        groupName={nameOfGroup}
+        description={description}
+        numberOfMembers={numberOfMembers}
+        foundingAmount={foundingAmount}
+        paymentFrequency={paymentFrequency}
+        typeOfGroup={typeOfGroup}
+        startDate={startDate.toString()} // Convert CalendarDate to string
+        token={token}
+      />
     </div>
   );
 };
