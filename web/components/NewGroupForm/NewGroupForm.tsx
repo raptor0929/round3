@@ -8,6 +8,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Image,
   Input,
   Switch,
   Textarea,
@@ -20,15 +21,15 @@ import DateDisplay from './DateDisplay';
 const NewGroupForm = () => {
   const [nameOfGroup, setNameOfGroup] = useState('');
   const [description, setDescription] = useState('');
-  const [numberOfMembers, setNumberOfMembers] = useState('2');
-  const [foundingAmount, setFoundingAmount] = useState('');
+  const [numberOfMembers, setNumberOfMembers] = useState('5');
+  const [foundingAmount, setFoundingAmount] = useState('100');
   const [paymentFrequency, setPaymentFrequency] = useState<
     'WEEKLY' | 'MONTHLY'
   >('MONTHLY');
 
   const [isPublic, setIsPublic] = useState(true);
   const [startDate, setStartDate] = useState(parseDate('2024-04-04'));
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState('USDC');
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
 
   const array = Array(12).fill(null);
@@ -77,19 +78,27 @@ const NewGroupForm = () => {
   };
 
   return (
-    <div className="flex w-full p-10 h-full gap-4">
-      <div className="flex flex-col gap-10 w-1/2 p-20 bg-white rounded-lg">
-        <span className="text-5xl h-1/4">Create New Round</span>
-        <div className="flex gap-2 items-center flex-wrap justify-center h-2/4">
-          {[...Array(Number(numberOfMembers) || 0)].map((_, index) => (
-            <Avatar
-              key={index}
-              src={`https://i.pravatar.cc/150?u=a04258114e29026708c${index}`}
-              className="w-20 h-20 m-2"
-            />
-          ))}
+    <div className="flex w-full p-2 h-full gap-4">
+      <div className="relative h-full w-1/2  ">
+        <div
+          className="absolute w-full h-full p-14  bg-no-repeat bg-cover rounded-lg"
+          style={{
+            backgroundImage: `url('./images/fondo01.jpg')`,
+            filter: 'blur(4px)',
+          }}
+        ></div>
+        <div className="relative flex flex-col p-24 w-full gap-10 justify-center h-full">
+          <h2 className="text-7xl h-1/4 font-inter font-bold ">New Round</h2>
+          <div className="flex gap-2 items-center flex-wrap justify-center h-2/4">
+            {[...Array(Number(numberOfMembers) || 0)].map((_, index) => (
+              <Avatar
+                key={index}
+                src={`https://i.pravatar.cc/150?u=a04258114e29026708c${index}`}
+                className="w-20 h-20 m-2 bg-white border-solid border-3 border-background"
+              />
+            ))}
+          </div>
         </div>
-        <DateDisplay date={startDate.toString()} />
       </div>
       <div className="bg-white h-full w-1/2 p-20 gap-2 rounded-lg grid grid-cols-2">
         <span className="text-black">Name of the group:</span>
@@ -99,7 +108,7 @@ const NewGroupForm = () => {
           value={nameOfGroup}
           onChange={handleNameChange}
         />
-        <span className="text-black">Founding Amount</span>
+        <span className="text-black">Funding Amount:</span>
         <Input
           type="number"
           label="Founding amount"
@@ -130,7 +139,7 @@ const NewGroupForm = () => {
           </DropdownMenu>
         </Dropdown>
 
-        <span className="text-black">Payment Frequency</span>
+        <span className="text-black">Payment Frequency:</span>
         <Dropdown>
           <DropdownTrigger>
             <Button variant="bordered" className="capitalize">
@@ -152,13 +161,14 @@ const NewGroupForm = () => {
 
         <div className="h-full  gap-2 rounded-lg grid grid-cols-2 col-span-2">
           <div className="flex gap-2 items-center">
-            <span className="text-black">
-              Visibility: {isPublic ? 'Public' : 'Private'}
-            </span>
+            <span> Visibility:</span>
             <Switch
               defaultSelected={isPublic}
               onChange={(e) => handleTypeOfGroupChange(e.target.checked)}
             />
+            <span className="text-black">
+              {isPublic ? 'Public' : 'Private'}
+            </span>
           </div>
           <div className="flex gap-2 items-center ">
             <span className="text-black">Token</span>
@@ -176,7 +186,7 @@ const NewGroupForm = () => {
                 selectedKeys={token}
                 onSelectionChange={handleTokenChange}
               >
-                <DropdownItem key="USDT">USDT</DropdownItem>
+                <DropdownItem key="USDC">USDC</DropdownItem>
                 <DropdownItem key="BTC">BTC</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -199,10 +209,12 @@ const NewGroupForm = () => {
           value={description}
           onChange={handleDescriptionChange}
         />
-        <div className="col-span-1 "></div>
-        <div className="col-span-1  flex items-center">
-          <Button color="primary" onPress={onOpen} className="w-full">
-            Create Group
+        <div className="col-span-2  flex items-center">
+          <Button
+            onPress={onOpen}
+            className="w-full bg-primaryOutline text-white"
+          >
+            Create Round
           </Button>
         </div>
         <ModalGroup

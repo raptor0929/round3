@@ -68,7 +68,7 @@ export default function ModalGroup({
                 <strong>Number of Members:</strong> {numberOfMembers}
               </p>
               <p>
-                <strong>Founding Amount:</strong> {fundingAmount}
+                <strong>Funding Amount:</strong> {fundingAmount}
               </p>
               <p>
                 <strong>Payment Frequency:</strong> {paymentFrequency}
