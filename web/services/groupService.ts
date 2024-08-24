@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import {
   Group,
   GroupMemberRole,
@@ -13,6 +13,7 @@ interface CreateGroupProps {
   public: boolean;
   token: Web3Token;
   description?: string;
+  groupPosition: number;
   fundingAmount: number;
   maximumMembers: number;
   startDate: Date | string;
@@ -27,7 +28,7 @@ interface CreateGroupProps {
  * @throws If the user is not found.
  */
 export const createGroup = async (props: CreateGroupProps): Promise<Group> => {
-  const { userId, ...groupData } = props;
+  const { userId, groupPosition, ...groupData } = props;
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
@@ -41,6 +42,10 @@ export const createGroup = async (props: CreateGroupProps): Promise<Group> => {
     throw new Error('Invalid start date');
   }
 
+  if (groupPosition < 0 || groupPosition >= props.maximumMembers) {
+    throw new Error('Invalid group position');
+  }
+
   return prisma.group.create({
     data: {
       ...groupData,
@@ -49,6 +54,7 @@ export const createGroup = async (props: CreateGroupProps): Promise<Group> => {
       members: {
         create: {
           userId: user.id,
+          groupPosition,
           role: GroupMemberRole.ADMIN,
           memberWalletAddress: user.walletAddress,
         },
