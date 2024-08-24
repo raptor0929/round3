@@ -5,6 +5,7 @@ import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
 import { NextUIProvider } from '@nextui-org/react';
 import LayoutComponent from '@/components/LayoutComponent';
+import { signIn, signOut } from '@/auth';
 
 export const metadata = {
   title: 'round3',
@@ -25,6 +26,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <form
+          action={async (formData) => {
+            'use server';
+            await signIn('credentials', formData);
+            await signOut();
+          }}
+        >
+          <label>
+            Wallet address
+            <input name="walletAddress" />
+          </label>
+          <button>Sign In</button>
+        </form>
         <ReactQueryProvider>
           <ClusterProvider>
             <SolanaProvider>

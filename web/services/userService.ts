@@ -12,7 +12,9 @@ interface CreateUserProps {
  * @param props Props to create a user
  * @returns User
  */
-export const createUser = async (props: CreateUserProps): Promise<User> => {
+export const createOrGetUser = async (
+  props: CreateUserProps
+): Promise<User> => {
   if (!isValidWalletAddress(props.walletAddress)) {
     throw new Error('Invalid wallet address format.');
   }

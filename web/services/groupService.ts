@@ -114,7 +114,7 @@ export const joinGroup = async ({
   const group = await findGroupById(groupId);
 
   if (!group || group.members.length >= group.maximumMembers) {
-    throw new Error('Cannot join this group');
+    throw new Error('Maximum number of members reached');
   }
 
   // Check if the user is already a member

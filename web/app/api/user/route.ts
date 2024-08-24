@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createUser, findUserByWallet } from '@/services/userService';
+import { createOrGetUser, findUserByWallet } from '@/services/userService';
 
 export async function POST(request: Request) {
   try {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     // If not, create a new user
     if (!user) {
-      user = await createUser({ walletAddress });
+      user = await createOrGetUser({ walletAddress });
     }
 
     return NextResponse.json({ user }, { status: 200 });
