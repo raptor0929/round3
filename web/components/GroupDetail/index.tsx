@@ -6,6 +6,8 @@ import { useGroupDetail } from '@/hooks/useGroupDetail';
 const GroupDetailContainer = () => {
   const { group, loading } = useGroupDetail();
 
+  // TODO: Alejandro design the UI for this component
+
   return (
     <div className="h-full w-full relative">
       <div className="h-full px-14 py-8">
