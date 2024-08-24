@@ -1,7 +1,13 @@
 'use client';
 
 import axios from 'axios';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { IGroup } from '@/types/types';
 
 export interface GroupDetailProviderContextType {
@@ -25,25 +31,30 @@ export const GroupDetailProvider = ({
   const [group, setGroup] = useState<IGroup | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const getGroup = async () => {
-      setLoading(true);
+  const getGroup = useCallback(async () => {
+    if (!groupId) return;
+
+    setLoading(true);
+    try {
       const response = await axios.get(`/api/group/${groupId}`);
 
-      if (response.status !== 201) {
+      if (response.status !== 200) {
         console.error('Error in retrieving group:', response.data);
         setGroup(null);
-        return;
+      } else {
+        setGroup(response.data.group);
       }
-
-      setGroup(response.data.group);
+    } catch (error) {
+      console.error('Error in retrieving group:', error);
+      setGroup(null);
+    } finally {
       setLoading(false);
-    };
-
-    if (groupId) {
-      getGroup();
     }
   }, [groupId]);
+
+  useEffect(() => {
+    getGroup();
+  }, [getGroup]);
 
   const contextValue: GroupDetailProviderContextType = {
     group,
