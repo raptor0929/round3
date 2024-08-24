@@ -62,8 +62,12 @@ export const createGroup = async (props: CreateGroupProps): Promise<Group> => {
   });
 };
 
-export const getGroups = async (): Promise<Group[]> => {
-  return prisma.group.findMany();
+export const getPublicGroups = async (): Promise<Group[]> => {
+  return prisma.group.findMany({
+    where: {
+      public: true,
+    },
+  });
 };
 
 export const getGroupsForUser = async (userId: string): Promise<Group[]> => {

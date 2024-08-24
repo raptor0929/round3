@@ -2,16 +2,19 @@
 
 import BodyLayout from '@/components/LayoutComponent/BodyLayout';
 import { useGroups } from '@/hooks/useGroups';
-import React from 'react';
+import { Modal, ModalContent, Spinner } from '@nextui-org/react';
+import React, { useEffect } from 'react';
 
 const Page = () => {
-  const { groups, loading: loadingGroups } = useGroups();
+  const { groups, loading: loadingGroups, refetchGroups } = useGroups();
+
+  useEffect(() => {
+    refetchGroups();
+  }, []);
 
   return (
     <BodyLayout title="Find Groups">
-      {loadingGroups ? (
-        <p>Loading groups...</p>
-      ) : groups.length === 0 ? (
+      {!loadingGroups && groups.length === 0 ? (
         <p>No groups found</p>
       ) : (
         <ul>
@@ -19,6 +22,13 @@ const Page = () => {
             <li key={group.id}>{group.title}</li>
           ))}
         </ul>
+      )}
+      {loadingGroups && (
+        <Modal isOpen={loadingGroups} hideCloseButton>
+          <ModalContent className="bg-transparent border-none shadow-none">
+            <Spinner />
+          </ModalContent>
+        </Modal>
       )}
     </BodyLayout>
   );

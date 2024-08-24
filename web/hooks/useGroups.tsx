@@ -9,10 +9,10 @@ export const useGroups = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchGroups = async () => {
+  const refetchGroups = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/groups');
+      const response = await axios.get('/api/group');
 
       if (response.status !== 200) {
         setError('Failed to fetch groups');
@@ -32,8 +32,8 @@ export const useGroups = () => {
   };
 
   useEffect(() => {
-    fetchGroups();
+    refetchGroups();
   }, []);
 
-  return { groups, loading, error };
+  return { groups, loading, error, refetchGroups };
 };
