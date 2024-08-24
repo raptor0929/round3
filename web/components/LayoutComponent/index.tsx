@@ -4,7 +4,7 @@ import MainSidebar from '../Global/MainSidebar';
 
 const LayoutComponent = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="body grid grid-cols-6 grid-rows-12 h-full">
+    <div className="body grid grid-cols-6 grid-rows-12 h-screen">
       <div className="col-start-2 col-span-6 row-span-1 bg-white">
         <NavbarLayout />
       </div>

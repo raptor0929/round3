@@ -7,20 +7,20 @@ export const useRoundGroups = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchRoundGroups = async () => {
-      try {
-        setLoading(true);
-        await new Promise<void>((resolve) => setTimeout(() => resolve(), 1000));
-        setRoundGroups(roundGroupsData);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch round groups');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchRoundGroups = async () => {
+    try {
+      setLoading(true);
+      await new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
+      setRoundGroups(roundGroupsData);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch round groups');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchRoundGroups();
   }, []);
 
