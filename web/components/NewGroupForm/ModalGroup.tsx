@@ -7,6 +7,7 @@ import {
   ModalFooter,
   Button,
 } from '@nextui-org/react';
+import Link from 'next/link';
 
 interface ModalGroupProps {
   isOpen: boolean;
@@ -33,6 +34,9 @@ export default function ModalGroup({
   startDate,
   token,
 }: ModalGroupProps) {
+  const handleSubmitData = () => {
+    onClose();
+  };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
@@ -71,8 +75,14 @@ export default function ModalGroup({
               <Button color="danger" variant="light" onPress={onClose}>
                 Close
               </Button>
-              <Button color="primary" onPress={onClose}>
-                Confirm
+
+              <Button
+                color="primary"
+                onPress={() => {
+                  onClose();
+                }}
+              >
+                <Link href="/your-groups">Confirm</Link>
               </Button>
             </ModalFooter>
           </>
