@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -9,41 +9,9 @@ import {
 } from '@nextui-org/react';
 
 export default function CardRound() {
-  const [isFollowed, setIsFollowed] = React.useState(false);
+  const [isFollowed, setIsFollowed] = useState(false);
 
   return (
-    //   <Card
-    //     key={group.roundGroupId}
-    //     className="max-w-[610px] bg-white m-2 rounded-lg text-black"
-    //   >
-    //     <CardHeader>
-    //       <div className="flex flex-col">
-    //         <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-    //           {group.name}
-    //         </span>
-    //         <span>{group.coin}</span>
-    //       </div>
-    //     </CardHeader>
-    //     <Divider />
-    //     <CardBody>
-    //       <span>Amount: {group.amount}</span>
-    //       <span>Members: {group.numberOfMembers}</span>
-    //       <span>Frequency: {group.frequency}</span>
-    //       <span>Start Date: {group.startDate}</span>
-    //       <span>Type: {group.type}</span>
-    //       <span>Status: {group.status}</span>
-    //     </CardBody>
-    //     <Divider />
-    //     <CardFooter>
-    //       <Link
-    //         isExternal
-    //         showAnchorIcon
-    //         href={`https://example.com/${group.roundGroupId}`} // Ajusta el enlace según sea necesario
-    //       >
-    //         View Details
-    //       </Link>
-    //     </CardFooter>
-    //   </Card>
     <Card className="max-w-[340px] bg-white">
       <CardHeader className="justify-between">
         <div className="flex gap-5">
