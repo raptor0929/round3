@@ -2,6 +2,7 @@
 import React from 'react';
 import { Modal, ModalContent, Spinner } from '@nextui-org/react';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
+import { PaymentSection } from './PaymentSection';
 
 const GroupDetailContainer = () => {
   const { group, loading } = useGroupDetail();
@@ -15,6 +16,9 @@ const GroupDetailContainer = () => {
           {group?.title}
         </div>
         <div className="flex gap-3">{group?.description}</div>
+      </div>
+      <div className="col-span-2  flex items-center">
+        <PaymentSection />
       </div>
       {loading && (
         <Modal isOpen={loading} hideCloseButton>
