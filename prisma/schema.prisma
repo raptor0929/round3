@@ -27,8 +27,20 @@ enum Web3Token {
   USDC
 }
 
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  walletAddress String // The web3 wallet address used for login
+  groups        GroupMember[]
+
+  @@unique([walletAddress])
+  @@map("users")
+}
+
 model Group {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -43,29 +55,22 @@ model Group {
   status           GroupStatus      @default(PENDING)
   startDate        DateTime
 
-  nextPayeeId Int?         @unique // References the next payee
+  nextPayeeId String?      @unique // References the next payee
   nextPayee   GroupMember? @relation("NextPayee", fields: [nextPayeeId], references: [id])
 
   groupContractAddress String // The address of the smart contract managing the payments
   token                Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDC on Solana
-}
 
-model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  walletAddress String        @unique // The web3 wallet address used for login
-  groups        GroupMember[]
+  @@map("groups")
 }
 
 model GroupMember {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId  Int
-  groupId Int
+  userId  String
+  groupId String
   user    User            @relation(fields: [userId], references: [id])
   group   Group           @relation(fields: [groupId], references: [id])
   role    GroupMemberRole @default(MEMBER)
@@ -74,14 +79,21 @@ model GroupMember {
   memberWalletAddress String // The web3 wallet address linked to this group membership
 
   nextPayeeForGroup Group? @relation("NextPayee") // Opposite side of the NextPayee relation, one-to-one
+
+  groupPosition Int // The position of the member in the group, used for determining the next payee
+
+  @@unique([userId, groupId])
+  @@map("groupmembers")
 }
 
 model Contribution {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
   amount          Float
   transactionHash String // Transaction hash from Solana smart contract
-  groupMemberId   Int
+  groupMemberId   String
   groupMember     GroupMember @relation(fields: [groupMemberId], references: [id])
+
+  @@map("contributions")
 }
