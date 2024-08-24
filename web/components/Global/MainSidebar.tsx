@@ -23,7 +23,7 @@ const MainSidebar = () => {
             <Link
               key={item.name}
               className={`flex items-center my-2 mx-6 p-3 rounded-lg cursor-pointer ${
-                pathname === item.path ? 'bg-primary' : ''
+                pathname === item.path ? 'bg-primaryOutline' : ''
               }`}
               href={item.path}
             >
