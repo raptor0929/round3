@@ -3,20 +3,10 @@
 import BodyLayout from '@/components/LayoutComponent/BodyLayout';
 import { useGroups } from '@/hooks/useGroups';
 import { Modal, ModalContent, Spinner } from '@nextui-org/react';
-import { Web3Token } from '@prisma/client';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const Page = () => {
-  const {
-    groups,
-    loading: loadingGroups,
-    refetchGroups,
-    createGroup,
-  } = useGroups();
-
-  useEffect(() => {
-    refetchGroups();
-  }, []);
+  const { groups, loading: loadingGroups } = useGroups();
 
   return (
     <BodyLayout title="Find Groups">

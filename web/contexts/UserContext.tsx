@@ -3,7 +3,7 @@
 import { IUser } from '@/types/types';
 import { useWallet } from '@solana/wallet-adapter-react';
 import axios from 'axios';
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState, useRef } from 'react';
 
 export interface UserProviderContextType {
   user: IUser | null;
@@ -20,39 +20,47 @@ export const UserProviderContext = createContext<
 export const UserProvider = ({ children }: UserProviderProps) => {
   const { publicKey, connected } = useWallet();
   const [user, setUser] = useState<IUser | null>(null);
+  const hasSignedIn = useRef(false); // Track if sign-in has been attempted
 
   useEffect(() => {
     const address = publicKey?.toString();
 
     const signIn = async () => {
-      if (!address) {
-        setUser(null);
+      if (!address || hasSignedIn.current) {
         return;
       }
 
-      const response = await axios.post('/api/login', {
-        walletAddress: address,
-      });
+      try {
+        const response = await axios.post('/api/login', {
+          walletAddress: address,
+        });
 
-      if (response.status !== 200) {
-        console.error('Error in retrieving user:', response.data);
+        if (response.status !== 200) {
+          console.error('Error in retrieving user:', response.data);
+          setUser(null);
+          return;
+        }
+
+        const { userId, walletAddress } = response.data.user;
+
+        setUser({
+          userId,
+          walletAddress,
+          memberships: [], // Update this as necessary
+        });
+
+        hasSignedIn.current = true; // Mark as signed in after successful sign-in
+      } catch (error) {
+        console.error('Sign-in error:', error);
         setUser(null);
-        return;
       }
-
-      const { userId, walletAddress } = response.data.user;
-
-      setUser({
-        userId,
-        walletAddress,
-        memberships: [],
-      });
     };
 
     if (connected && address) {
       signIn();
     } else {
       setUser(null);
+      hasSignedIn.current = false; // Reset the flag if the user disconnects
     }
   }, [publicKey, connected]);
 
