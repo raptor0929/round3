@@ -71,3 +71,14 @@ export const findGroupMembership = async ({
     where: { userId_groupId: { groupId, userId }, group: { deletedAt: null } },
   });
 };
+
+export const findAllMembershipsForGroup = async ({
+  groupId,
+}: {
+  groupId: string;
+}) => {
+  return await prisma.groupMember.findMany({
+    where: { groupId, group: { deletedAt: null } },
+    include: { user: true },
+  });
+};

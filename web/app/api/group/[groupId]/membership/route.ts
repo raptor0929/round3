@@ -8,31 +8,6 @@ import {
   leaveGroup,
 } from '@/services/membershipService';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { groupId: string } }
-) {
-  try {
-    const groupId = params.groupId;
-
-    const session = await auth();
-    const userId = session?.user?.id;
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const membership = await findGroupMembership({ groupId, userId });
-
-    return NextResponse.json({ membership }, { status: 200 });
-  } catch (error) {
-    console.error('Error in retrieving group:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-}
-
 export async function POST(
   request: NextRequest,
   { params }: { params: { groupId: string } }

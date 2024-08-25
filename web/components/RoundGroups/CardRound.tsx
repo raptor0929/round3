@@ -17,9 +17,13 @@ import {
 } from '@nextui-org/react';
 import { IGroup } from '@/types/types';
 import TablePayments from './TablePayments';
+import { useMembership } from '@/hooks/useMembership';
+import { useContributions } from '@/hooks/useContributions';
 
 export default function CardRound({ group }: { group: IGroup }) {
   const { isOpen, onOpenChange } = useDisclosure();
+  const { allMemberships } = useMembership(group.id);
+  const { groupContributions, makePayment } = useContributions(group.id);
 
   return (
     <>
@@ -117,9 +121,9 @@ export default function CardRound({ group }: { group: IGroup }) {
                   </div>
                   <div>
                     <p className="text-lg font-semibold">
-                      Maximum Members:{' '}
+                      Members:{' '}
                       <span className="font-normal">
-                        {group.maximumMembers}
+                        {allMemberships.length} of {group.maximumMembers}
                       </span>
                     </p>
                   </div>
@@ -147,12 +151,12 @@ export default function CardRound({ group }: { group: IGroup }) {
                   </div>
                 </div>
                 {group.status === 'ACTIVE' && (
-                  <div className="mt-6">
-                    <h3 className="text-xl font-semibold mb-4">
-                      Payment Schedule
-                    </h3>
-                    <TablePayments />
-                  </div>
+                  <TablePayments
+                    members={allMemberships}
+                    token={group.token}
+                    contributions={groupContributions}
+                    onClickPay={makePayment}
+                  />
                 )}
               </ModalBody>
               <ModalFooter className="p-6 bg-gray-50">

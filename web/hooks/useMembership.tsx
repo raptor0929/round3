@@ -4,27 +4,28 @@ import { useCallback, useEffect, useState } from 'react';
 
 export const useMembership = (groupId: string) => {
   const [loading, setLoading] = useState(true);
-  const [membership, setMembership] = useState<IGroupMembership | null>(null);
+  const [allMemberships, setAllMemberships] = useState<IGroupMembership[]>([]);
+
+  const fetchMemberships = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/group/${groupId}/memberships`);
+
+      if (response.status === 200) {
+        setAllMemberships(response.data.memberships);
+      } else {
+        console.error('Error in fetching membership:', response.data);
+      }
+    } catch (error) {
+      console.error('Error in fetching membership:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [groupId]);
 
   useEffect(() => {
-    const fetchMembership = async () => {
-      try {
-        const response = await axios.get(`/api/group/${groupId}/membership`);
-
-        if (response.status === 200) {
-          setMembership(response.data.membership);
-        } else {
-          console.error('Error in fetching membership:', response.data);
-        }
-      } catch (error) {
-        console.error('Error in fetching membership:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMembership();
-  }, [groupId]);
+    console.log('fetching memberships');
+    fetchMemberships();
+  }, []);
 
   const joinGroup = useCallback(async () => {
     if (!groupId) return;
@@ -35,7 +36,7 @@ export const useMembership = (groupId: string) => {
       if (response.status !== 201) {
         console.error('Error in joining group:', response.data);
       } else {
-        setMembership(response.data.membership);
+        setAllMemberships([response.data.membership]);
       }
     } catch (error) {
       console.error('Error in joining group:', error);
@@ -51,12 +52,12 @@ export const useMembership = (groupId: string) => {
       if (response.status !== 200) {
         console.error('Error in leaving group:', response.data);
       } else {
-        setMembership(null);
+        await fetchMemberships();
       }
     } catch (error) {
       console.error('Error in leaving group:', error);
     }
-  }, [groupId]);
+  }, [groupId, fetchMemberships]);
 
-  return { membership, loading, leaveGroup, joinGroup };
+  return { allMemberships, loading, leaveGroup, joinGroup };
 };

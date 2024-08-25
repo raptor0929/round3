@@ -1,53 +1,87 @@
-import React from 'react';
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-} from '@nextui-org/react';
+import React, { useCallback, useState } from 'react';
+import { Button } from '@nextui-org/react';
+import { IContribution, IGroupMembership } from '@/types/types'; // Assume this is your type for group members
+import { useSession } from 'next-auth/react';
 
-export default function TablePayments() {
+// Utility function to truncate userId
+const truncateId = (id: string) => {
+  if (id.length <= 6) return id;
+  return `${id.slice(0, 3)}..${id.slice(-3)}`;
+};
+
+export default function TablePayments({
+  members,
+  token,
+  contributions,
+  onClickPay,
+}: {
+  members: IGroupMembership[];
+  token: string;
+  contributions: IContribution[];
+  onClickPay: (amount: number) => Promise<void>;
+}) {
+  const [loading, setLoading] = useState(true);
+
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+
+  const onPayPress = useCallback(async (amount: number) => {
+    setLoading(true);
+    try {
+      await onClickPay(amount);
+    } catch (error) {
+      console.error('Error in making payment:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const connectedUser = members.find((member) => member.userId === userId);
+  if (!connectedUser) return null;
+
+  console.log('contributions:', contributions, connectedUser);
+
   return (
-    <Table aria-label="Example static collection table">
-      <TableHeader>
-        <TableColumn>NAME</TableColumn>
-        <TableColumn>ROLE</TableColumn>
-        <TableColumn>STATUS</TableColumn>
-      </TableHeader>
-      <TableBody>
-        <TableRow key="1">
-          <TableCell>Tony Reichert</TableCell>
-          <TableCell>CEO</TableCell>
-          <TableCell>
-            <Button color="success">Pay</Button>
-          </TableCell>
-        </TableRow>
-        <TableRow key="2">
-          <TableCell>Zoey Lang</TableCell>
-          <TableCell>Technical Lead</TableCell>
-          <TableCell>
-            {' '}
-            <Button color="success">Pay</Button>
-          </TableCell>
-        </TableRow>
-        <TableRow key="3">
-          <TableCell>Jane Fisher</TableCell>
-          <TableCell>Senior Developer</TableCell>
-          <TableCell>
-            <Button color="success">Pay</Button>
-          </TableCell>
-        </TableRow>
-        <TableRow key="4">
-          <TableCell>William Howard</TableCell>
-          <TableCell>Community Manager</TableCell>
-          <TableCell>
-            <Button color="success">Pay</Button>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <div className="w-full mt-6">
+      <h3 className="text-xl font-semibold mb-4">Payment Schedule</h3>
+      <div className="grid grid-cols-3 gap-4 text-left">
+        <div className="font-semibold">User ID</div>
+        <div className="font-semibold">Amount Due</div>
+      </div>
+      {members.map((member) => (
+        <div
+          key={member.userId}
+          className="grid grid-cols-3 gap-4 items-center py-2"
+        >
+          <div>
+            {truncateId(member.userId)}{' '}
+            {connectedUser.userId === member.userId && '(You)'}
+          </div>
+          <div>
+            {member.amountOwed} {token}
+          </div>
+          <div>
+            {connectedUser.userId === member.userId ? (
+              <Button
+                color="primary"
+                isLoading={loading}
+                disabled={connectedUser.amountOwed === 0}
+                onPress={() => onPayPress(connectedUser.amountOwed)}
+              >
+                Pay
+              </Button>
+            ) : (
+              <span className="text-default-400">-</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
+
+// Example handler for pay button (to be implemented)
+const handlePay = (userId: string) => {
+  console.log(`Pay button clicked for userId: ${userId}`);
+  // Implement your payment logic here
+};
