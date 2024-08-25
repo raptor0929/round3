@@ -96,7 +96,9 @@ const NewGroupForm = () => {
             {[...Array(Number(numberOfMembers) || 0)].map((_, index) => (
               <Avatar
                 key={index}
-                src={`https://i.pravatar.cc/150?u=a04258114e29026708c${index}`}
+                src={`https://i.pravatar.cc/150?u=a04258114e29026708c${
+                  index + 3
+                }`}
                 className="w-17 h-17 m-2 bg-white border-solid border-3 border-background"
               />
             ))}

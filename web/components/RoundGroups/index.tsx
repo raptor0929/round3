@@ -12,7 +12,7 @@ const RoundGroups = () => {
   const { connected } = useWallet();
 
   return (
-    <div className="h-screen w-full relative overflow-scroll mb-10">
+    <div className="h-screen w-full overflow-scroll mb-10">
       <div className="h-full px-14 py-8">
         <h2 className="text-7xl h-1/5 font-bold font-sans flex items-center">
           Your Rounds
