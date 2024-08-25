@@ -14,9 +14,10 @@ import {
   Textarea,
   useDisclosure,
 } from '@nextui-org/react';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ModalGroup from './ModalGroup';
-import DateDisplay from './DateDisplay';
+import { WalletButton } from '../solana/solana-provider';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const NewGroupForm = () => {
   const [nameOfGroup, setNameOfGroup] = useState('');
@@ -30,9 +31,18 @@ const NewGroupForm = () => {
   const [isPublic, setIsPublic] = useState(true);
   const [startDate, setStartDate] = useState(parseDate('2024-04-04'));
   const [token, setToken] = useState('USDC');
+
+  const { connected: walletConnected } = useWallet();
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
 
   const array = Array(12).fill(null);
+
+  const onCreateRoundPress = useCallback(() => {
+    if (!nameOfGroup || !foundingAmount) {
+      return;
+    }
+    onOpen();
+  }, [onOpen, foundingAmount, nameOfGroup]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNameOfGroup(e.target.value);
@@ -149,8 +159,8 @@ const NewGroupForm = () => {
             selectedKeys={paymentFrequency}
             onSelectionChange={handlePaymentFrequencyChange}
           >
-            <DropdownItem key="MONTHLY">MONTHLY</DropdownItem>
-            <DropdownItem key="WEEKLY">WEEKLY</DropdownItem>
+            <DropdownItem key="MONTHLY">Monthly</DropdownItem>
+            <DropdownItem key="WEEKLY">Weekly</DropdownItem>
           </DropdownMenu>
         </Dropdown>
 
@@ -195,13 +205,19 @@ const NewGroupForm = () => {
           onChange={handleDescriptionChange}
           className="grid-cols-2 col-span-2 items-center justify-center"
         />
-        <div className="col-span-2 flex items-center ">
-          <Button
-            onPress={onOpen}
-            className="w-full bg-primaryOutline text-white py-6"
-          >
-            Create Round
-          </Button>
+        <div className="col-span-2 flex items-center">
+          {walletConnected ? (
+            <Button
+              onPress={onCreateRoundPress}
+              className="w-full bg-primaryOutline text-white py-6"
+            >
+              Create Round
+            </Button>
+          ) : (
+            <WalletButton className="w-full bg-primaryOutline text-white py-6">
+              Connect Wallet
+            </WalletButton>
+          )}
         </div>
         <ModalGroup
           isOpen={isOpen}
