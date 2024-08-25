@@ -30,7 +30,9 @@ export default function CardRound({
 }) {
   const { isOpen, onOpenChange } = useDisclosure();
   const { allMemberships } = useMembership(group.id);
-
+  if (group.status === 'ACTIVE' && isYourRounds) {
+    return <></>;
+  }
   return (
     <>
       <div onClick={onOpenChange} className="relative cursor-pointer">
@@ -63,13 +65,7 @@ export default function CardRound({
           </CardFooter>
           <Chip
             className="absolute top-4 right-4"
-            color={
-              group.status === 'ACTIVE'
-                ? 'success'
-                : group.status === 'PENDING'
-                ? 'warning'
-                : 'default'
-            }
+            color={group.status === 'PENDING' ? 'warning' : 'default'}
             size="sm"
             variant="flat"
           >
@@ -165,7 +161,7 @@ export default function CardRound({
                 )}
               </ModalBody>
               <ModalFooter className="p-6 bg-gray-50">
-                {group.status === 'ACTIVE' && isYourRounds && (
+                {group.status === 'PENDING' && isYourRounds && (
                   <Button
                     color="success"
                     onPress={onClose}
