@@ -9,7 +9,7 @@ export async function POST(
 ) {
   try {
     const groupId = params.groupId;
-    const { paymentAmount } = await request.json();
+    const { amount } = await request.json();
 
     const session = await auth();
     const userId = session?.user?.id;
@@ -25,7 +25,7 @@ export async function POST(
       );
     }
 
-    const payment = await makePayment(groupId, userId, paymentAmount);
+    const payment = await makePayment(groupId, userId, amount);
 
     return NextResponse.json({ payment }, { status: 201 });
   } catch (error) {

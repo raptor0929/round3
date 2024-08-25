@@ -3,14 +3,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { IGroup } from '@/types/types';
-import { Web3Token } from '@prisma/client';
 
 interface CreateGroupProps {
   title: string;
   description: string;
   fundingAmount: number;
   maximumMembers: number;
-  token: Web3Token;
+  token: string;
   paymentFrequency: 'WEEKLY' | 'MONTHLY';
   isPublic: boolean;
   startDate: Date | string;
@@ -46,7 +45,9 @@ export const useGroups = () => {
     }
   };
 
-  const createGroup = async (props: CreateGroupProps) => {
+  const createGroup = async (
+    props: CreateGroupProps
+  ): Promise<IGroup | undefined> => {
     try {
       setLoading(true);
       const response = await axios.post('/api/group/create', props);
@@ -57,14 +58,17 @@ export const useGroups = () => {
         return;
       }
 
-      // optimistic update
-      setGroups([...groups, response.data.group]);
+      const group = response.data.group as IGroup;
 
-      await refetchGroups();
+      // optimistic update
+      setGroups([...groups, group]);
       setError(null);
+
+      return group;
     } catch (err) {
       setError('Failed to create group');
     } finally {
+      refetchGroups();
       setLoading(false);
     }
   };

@@ -8,7 +8,6 @@ export const useMembership = (groupId: string) => {
 
   useEffect(() => {
     const fetchMembership = async () => {
-      console.log('Fetching membership for group:', groupId);
       try {
         const response = await axios.get(`/api/group/${groupId}/membership`);
 

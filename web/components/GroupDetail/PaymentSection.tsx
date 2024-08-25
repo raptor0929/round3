@@ -8,7 +8,7 @@ export const PaymentSection = () => {
   const amountOwed = membership?.amountOwed ?? 0;
 
   const onPayPress = useCallback(async () => {
-    makePayment(amountOwed);
+    await makePayment(amountOwed);
   }, [makePayment, amountOwed]);
 
   return (

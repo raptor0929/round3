@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useContributions = (groupId: string) => {
+  const [loading, setLoading] = useState(false);
   const [groupContributions, setGroupContributions] = useState<IContribution[]>(
     []
   );
@@ -11,6 +12,7 @@ export const useContributions = (groupId: string) => {
     if (!groupId) return;
 
     try {
+      setLoading(true);
       const response = await axios.get(`/api/group/${groupId}/contributions`);
 
       if (response.status === 200) {
@@ -20,6 +22,8 @@ export const useContributions = (groupId: string) => {
       }
     } catch (error) {
       console.error('Error in fetching contributions:', error);
+    } finally {
+      setLoading(false);
     }
   }, [groupId]);
 
@@ -28,6 +32,7 @@ export const useContributions = (groupId: string) => {
       if (!groupId) return;
 
       try {
+        setLoading(true);
         const response = await axios.post(`/api/group/${groupId}/pay`, {
           amount,
         });
@@ -35,17 +40,20 @@ export const useContributions = (groupId: string) => {
         if (response.status !== 201) {
           console.error('Error in making payment:', response.data);
         }
+
+        await fetchGroupContributions();
       } catch (error) {
         console.error('Error in making payment:', error);
+      } finally {
+        setLoading(false);
       }
     },
     [groupId]
   );
 
   useEffect(() => {
-    console.log('fetching Group contributions...');
     fetchGroupContributions();
   }, []);
 
-  return { makePayment, groupContributions };
+  return { makePayment, groupContributions, loading };
 };
