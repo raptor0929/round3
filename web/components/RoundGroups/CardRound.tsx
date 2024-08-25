@@ -101,9 +101,6 @@ export default function CardRound({ group }: { group: IGroup }) {
                   {group.public ? 'Public' : 'Private'}
                 </p>
                 <p>
-                  <strong>Start Date:</strong> {group.startDate}
-                </p>
-                <p>
                   <strong>Token:</strong> {group.token}
                 </p>
                 <p>
