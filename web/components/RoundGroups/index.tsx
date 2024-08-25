@@ -13,18 +13,12 @@ const RoundGroups = () => {
 
   return (
     <div className="h-full w-full relative ">
-      <div
-        className="h-full px-14 py-8"
-        // style={{
-        //   backgroundImage: `url('./images/fondo01.jpg')`,
-        //   filter: 'blur(4px)',
-        // }}
-      >
+      <div className="h-full px-14 py-8">
         <h2 className="text-7xl h-1/5 font-bold font-sans flex items-center">
           Your Rounds
         </h2>
         {connected ? (
-          <div className="flex gap-4 flex-wrap">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {myGroups.map((group) => (
               <CardRound key={group.id} group={group} />
             ))}
