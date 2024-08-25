@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardHeader,
@@ -14,11 +14,10 @@ import {
   Chip,
   Divider,
 } from '@nextui-org/react';
-import { IRoundGroup } from '@/types/types';
-import Link from 'next/link';
+import { IGroup } from '@/types/types';
 import TablePayments from './TablePayments';
 
-export default function CardRound({ group }: { group: IRoundGroup }) {
+export default function CardRound({ group }: { group: IGroup }) {
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -28,10 +27,10 @@ export default function CardRound({ group }: { group: IRoundGroup }) {
           <div className="flex gap-5">
             <div className="flex flex-col gap-1 items-start justify-center">
               <h5 className=" font-semibold leading-none text-default-600">
-                {group.name}
+                {group.title}
               </h5>
               <h3 className="text-small tracking-tight text-default-400">
-                {group.amount} {group.coin}
+                {group.fundingAmount} {group.token}
               </h3>
             </div>
           </div>
@@ -56,7 +55,7 @@ export default function CardRound({ group }: { group: IRoundGroup }) {
         </CardBody>
         <CardFooter className="gap-3">
           <div className="flex gap-1">
-            <p>Frequency: {group.frequency}</p>
+            <p>Frequency: {group.paymentFrequency}</p>
           </div>
         </CardFooter>
       </Card>
@@ -71,12 +70,12 @@ export default function CardRound({ group }: { group: IRoundGroup }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex gap-2 text-3xl justify-between items-center">
-                {group.name}
+                {group.title}
                 <Chip
                   color={
-                    group.status === 'RUNNING'
+                    group.status === 'ACTIVE'
                       ? 'success'
-                      : group.status === 'WAITING'
+                      : group.status === 'PENDING'
                       ? 'warning'
                       : 'default'
                   }
@@ -87,28 +86,29 @@ export default function CardRound({ group }: { group: IRoundGroup }) {
               <Divider />
               <ModalBody className="text-lg">
                 <p>
-                  <strong>Funding Amount:</strong> {group.amount}
+                  <strong>Funding Amount:</strong> {group.fundingAmount}
                 </p>
                 <p>
-                  <strong>Number of Members:</strong> {group.numberOfMembers}
+                  <strong>Maximum Number of Members:</strong>{' '}
+                  {group.maximumMembers}
                 </p>
                 <p>
-                  <strong>Payment Frequency:</strong> {group.frequency}
+                  <strong>Payment Frequency:</strong> {group.paymentFrequency}
                 </p>
                 <p>
-                  <strong>Type of Group:</strong>{' '}
-                  {group.type === 'PUBLIC' ? 'Public' : 'Private'}
+                  <strong>Visibility:</strong>{' '}
+                  {group.public ? 'Public' : 'Private'}
                 </p>
                 <p>
                   <strong>Start Date:</strong> {group.startDate}
                 </p>
                 <p>
-                  <strong>Token:</strong> {group.coin}
+                  <strong>Token:</strong> {group.token}
                 </p>
                 <p>
                   <strong>Description:</strong> {group.description}
                 </p>
-                {group.status === 'RUNNING' && <TablePayments />}
+                {group.status === 'ACTIVE' && <TablePayments />}
               </ModalBody>
               <ModalFooter>
                 {/* <Button

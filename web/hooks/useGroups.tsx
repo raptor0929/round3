@@ -1,8 +1,10 @@
 'use client';
 
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { IGroup, IGroupMembership } from '@/types/types';
+import { auth } from '@/auth';
 
 interface CreateGroupProps {
   title: string;
@@ -20,12 +22,42 @@ export const useGroups = () => {
   const [myGroups, setMyGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   useEffect(() => {
-    refetchGroups();
+    if (userId) {
+      refetchMyGroups();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    refetchAllGroups();
   }, []);
 
-  const refetchGroups = async () => {
+  const refetchMyGroups = async () => {
+    if (!userId) return;
+
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/group/me');
+
+      if (response.status !== 200) {
+        setError('Failed to fetch my groups');
+        return;
+      }
+
+      const myGroups = response.data.groups.map((g: any) => g as IGroup);
+      setMyGroups(myGroups);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch my groups');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refetchAllGroups = async () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/group');
@@ -36,12 +68,8 @@ export const useGroups = () => {
       }
 
       const fetchedGroups = response.data.groups.map((g: any) => g as IGroup);
-      const myGroups = fetchedGroups.filter((group: IGroup) =>
-        group.members.some((m: IGroupMembership) => m.userId === '1')
-      );
 
       setAllGroups(fetchedGroups);
-      setMyGroups(myGroups);
       setError(null);
     } catch (err) {
       setError('Failed to fetch groups');
@@ -74,7 +102,8 @@ export const useGroups = () => {
     } catch (err) {
       setError('Failed to create group');
     } finally {
-      refetchGroups();
+      refetchMyGroups();
+      refetchAllGroups();
       setLoading(false);
     }
   };
@@ -84,7 +113,8 @@ export const useGroups = () => {
     myGroups,
     loading,
     error,
-    refetchGroups,
     createGroup,
+    refetchMyGroups,
+    refetchAllGroups,
   };
 };

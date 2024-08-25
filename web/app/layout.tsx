@@ -5,8 +5,8 @@ import { SolanaProvider } from '@/components/solana/solana-provider';
 import { ReactQueryProvider } from './react-query-provider';
 import { NextUIProvider } from '@nextui-org/react';
 import LayoutComponent from '@/components/LayoutComponent';
-import { signIn, signOut } from '@/auth';
 import { UserProvider } from '@/contexts/UserContext';
+import { SessionProvider } from 'next-auth/react';
 
 export const metadata = {
   title: 'round3',
@@ -31,10 +31,12 @@ export default function RootLayout({
           <ClusterProvider>
             <SolanaProvider>
               <NextUIProvider>
-                <UserProvider>
-                  {/* <UiLayout links={links}>{children}</UiLayout> */}
-                  <LayoutComponent>{children}</LayoutComponent>
-                </UserProvider>
+                <SessionProvider>
+                  <UserProvider>
+                    {/* <UiLayout links={links}>{children}</UiLayout> */}
+                    <LayoutComponent>{children}</LayoutComponent>
+                  </UserProvider>
+                </SessionProvider>
               </NextUIProvider>
             </SolanaProvider>
           </ClusterProvider>

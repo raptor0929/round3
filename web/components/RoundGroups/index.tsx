@@ -1,17 +1,12 @@
 'use client';
-import { useRoundGroups } from '@/hooks/useRoundGroups';
+
 import React from 'react';
 import CardRound from './CardRound';
-import {
-  Modal,
-  ModalContent,
-  Skeleton,
-  Snippet,
-  Spinner,
-} from '@nextui-org/react';
+import { Modal, Snippet } from '@nextui-org/react';
+import { useGroups } from '@/hooks/useGroups';
 
 const RoundGroups = () => {
-  const { roundGroups, loading, error } = useRoundGroups();
+  const { myGroups, loading } = useGroups();
 
   return (
     <div className="h-full w-full relative ">
@@ -26,8 +21,8 @@ const RoundGroups = () => {
           Your Rounds
         </h2>
         <div className="flex gap-4 flex-wrap">
-          {roundGroups.map((group, index) => (
-            <CardRound key={index} group={group} />
+          {myGroups.map((group) => (
+            <CardRound key={group.id} group={group} />
           ))}
         </div>
       </div>
