@@ -18,7 +18,7 @@ import { IGroup } from '@/types/types';
 import TablePayments from './TablePayments';
 
 export default function CardRound({ group }: { group: IGroup }) {
-  const { onOpen, isOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpenChange } = useDisclosure();
 
   return (
     <>

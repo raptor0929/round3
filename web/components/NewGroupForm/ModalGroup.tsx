@@ -35,9 +35,10 @@ export default function ModalGroup({
   startDate,
   token,
 }: ModalGroupProps) {
-  const { createGroup } = useGroups();
-  const handleSubmitData = () => {
-    createGroup({
+  const { createGroup, loading } = useGroups();
+
+  const handleSubmitData = async () => {
+    await createGroup({
       title: groupName,
       description: description,
       fundingAmount: Number(fundingAmount),
@@ -47,7 +48,6 @@ export default function ModalGroup({
       isPublic: isPublic,
       startDate: startDate,
     });
-    // onOpenChange();
   };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -86,13 +86,15 @@ export default function ModalGroup({
             </ModalBody>
             <ModalFooter>
               <Button
+                isLoading={loading}
+                disabled={loading}
                 color="primary"
-                onPress={() => {
-                  handleSubmitData();
+                onPress={async () => {
+                  await handleSubmitData();
                   onClose();
                 }}
               >
-                <Link href="/your-groups">CONFIRM</Link>
+                <Link href="/your-groups">Confirm</Link>
               </Button>
             </ModalFooter>
           </>

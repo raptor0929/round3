@@ -2,10 +2,11 @@
 
 import CardRound from '@/components/RoundGroups/CardRound';
 import { useGroups } from '@/hooks/useGroups';
+import { Modal, ModalContent, Spinner } from '@nextui-org/react';
 import React from 'react';
 
 const Page = () => {
-  const { allGroups } = useGroups();
+  const { allGroups, loading } = useGroups();
 
   return (
     <div className="h-full w-full relative">
@@ -19,6 +20,13 @@ const Page = () => {
           ))}
         </div>
       </div>
+      {loading && (
+        <Modal isOpen={loading} hideCloseButton>
+          <ModalContent className="bg-transparent border-none shadow-none">
+            <Spinner />
+          </ModalContent>
+        </Modal>
+      )}
     </div>
   );
 };

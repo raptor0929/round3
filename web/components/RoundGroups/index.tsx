@@ -2,7 +2,7 @@
 
 import React from 'react';
 import CardRound from './CardRound';
-import { Modal, Snippet } from '@nextui-org/react';
+import { Modal, ModalContent, Spinner } from '@nextui-org/react';
 import { useGroups } from '@/hooks/useGroups';
 
 const RoundGroups = () => {
@@ -26,9 +26,13 @@ const RoundGroups = () => {
           ))}
         </div>
       </div>
-      <Modal isOpen={loading}>
-        <Snippet />
-      </Modal>
+      {loading && (
+        <Modal isOpen={loading} hideCloseButton>
+          <ModalContent className="bg-transparent border-none shadow-none">
+            <Spinner />
+          </ModalContent>
+        </Modal>
+      )}
     </div>
   );
 };
