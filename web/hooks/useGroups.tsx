@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { IGroup } from '@/types/types';
+import { IGroup, IGroupMembership } from '@/types/types';
 
 interface CreateGroupProps {
   title: string;
@@ -16,7 +16,8 @@ interface CreateGroupProps {
 }
 
 export const useGroups = () => {
-  const [groups, setGroups] = useState<IGroup[]>([]);
+  const [allGroups, setAllGroups] = useState<IGroup[]>([]);
+  const [myGroups, setMyGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,8 +36,12 @@ export const useGroups = () => {
       }
 
       const fetchedGroups = response.data.groups.map((g: any) => g as IGroup);
+      const myGroups = fetchedGroups.filter((group: IGroup) =>
+        group.members.some((m: IGroupMembership) => m.userId === '1')
+      );
 
-      setGroups(fetchedGroups);
+      setAllGroups(fetchedGroups);
+      setMyGroups(myGroups);
       setError(null);
     } catch (err) {
       setError('Failed to fetch groups');
@@ -58,13 +63,14 @@ export const useGroups = () => {
         return;
       }
 
-      const group = response.data.group as IGroup;
+      const newGroup = response.data.group as IGroup;
 
       // optimistic update
-      setGroups([...groups, group]);
+      setAllGroups([...allGroups, newGroup]);
+      setMyGroups([...myGroups, newGroup]);
       setError(null);
 
-      return group;
+      return newGroup;
     } catch (err) {
       setError('Failed to create group');
     } finally {
@@ -73,5 +79,12 @@ export const useGroups = () => {
     }
   };
 
-  return { groups, loading, error, refetchGroups, createGroup };
+  return {
+    allGroups,
+    myGroups,
+    loading,
+    error,
+    refetchGroups,
+    createGroup,
+  };
 };
