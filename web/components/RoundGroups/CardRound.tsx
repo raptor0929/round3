@@ -18,8 +18,16 @@ import {
 import { IGroup } from '@/types/types';
 import TablePayments from './TablePayments';
 import { useMembership } from '@/hooks/useMembership';
+import Link from 'next/link';
 
-export default function CardRound({ group }: { group: IGroup }) {
+// TODO: isYourRounds its just for demo presentation, it is necessary to have another component for this section
+export default function CardRound({
+  group,
+  isYourRounds,
+}: {
+  group: IGroup;
+  isYourRounds: boolean;
+}) {
   const { isOpen, onOpenChange } = useDisclosure();
   const { allMemberships } = useMembership(group.id);
 
@@ -157,6 +165,15 @@ export default function CardRound({ group }: { group: IGroup }) {
                 )}
               </ModalBody>
               <ModalFooter className="p-6 bg-gray-50">
+                {group.status === 'ACTIVE' && isYourRounds && (
+                  <Button
+                    color="success"
+                    onPress={onClose}
+                    className="text-white"
+                  >
+                    <Link href={'/your-groups'}>Join</Link>
+                  </Button>
+                )}
                 <Button color="primary" onPress={onClose}>
                   Close
                 </Button>
