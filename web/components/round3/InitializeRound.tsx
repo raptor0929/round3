@@ -1,9 +1,12 @@
+'use client';
 import React, { useState } from 'react';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import { Connection, PublicKey, Keypair } from '@solana/web3.js';
 import { Program, AnchorProvider, web3, BN } from '@coral-xyz/anchor';
-import { Round3 } from './round3'; // Make sure to import your IDL
-import idl from './round3.json'; // Your IDL file
+import { Round3, Round3IDL } from '@round3/anchor';
+import { TOKEN_PROGRAM_ID, createAccount, createAssociatedTokenAccount } from '@solana/spl-token';
+// import { Round3 } from './round3'; // Make sure to import your IDL
+// import idl from './round3.json'; // Your IDL file
 
 const InitializeRoundComponent = () => {
   const [paymentAmount, setPaymentAmount] = useState('');
@@ -19,13 +22,13 @@ const InitializeRoundComponent = () => {
 
     const connection = new Connection('https://api.devnet.solana.com');
     const provider = new AnchorProvider(connection, wallet, {});
-    const programId = new PublicKey('Your_Program_ID_Here');
-    const program = new Program(idl, programId, provider);
+    const programId = new PublicKey('9srbzKr5hQQ2nbPiW1y9UK9yTEffBW9HrgF7EhKLwdCb');
+    const program = new Program(Round3IDL, programId, provider);
 
     const roundKeypair = Keypair.generate();
-    const tokenMint = new PublicKey('Your_Token_Mint_Address_Here');
-    const initializerTokenAccount = new PublicKey('Your_Initializer_Token_Account_Here');
-    const roundTokenAccount = new PublicKey('Your_Round_Token_Account_Here');
+    const tokenMint = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU');
+    const initializerTokenAccount = new PublicKey('Hbb9BJBboJSJJQKqTwa86AB4EQu4sS948Y453rgAMk4h');
+    const roundTokenAccount = new PublicKey('4PuburbozaFjxiXQsGjGqvG2mAsx5fPQGbPZJvdDoiXY');
 
     try {
       await program.methods
@@ -40,13 +43,15 @@ const InitializeRoundComponent = () => {
           tokenMint: tokenMint,
           initializerTokenAccount: initializerTokenAccount,
           roundTokenAccount: roundTokenAccount,
-          tokenProgram: web3.TokenProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: web3.SystemProgram.programId,
         })
         .signers([roundKeypair])
-        .rpc();
+        .rpc().catch(e => console.log(e));
+        console.log('Success!!! ', roundTokenAccount);
 
-      alert('Round initialized successfully!');
+    //   alert('Round initialized successfully!');
+
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to initialize round');
