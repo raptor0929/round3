@@ -25,7 +25,9 @@ enum PaymentFrequency {
 }
 
 enum Web3Token {
-  USDT
+  BTC
+  SOL
+  USDC
 }
 
 model User {
@@ -61,7 +63,7 @@ model Group {
   nextPayee   GroupMember? @relation("NextPayee", fields: [nextPayeeId], references: [id])
 
   groupContractAddress String // The address of the smart contract managing the payments
-  token                Web3Token @default(USDT) // The token used for payments in this group, defaulting to USDT
+  token                Web3Token @default(USDC) // The token used for payments in this group, defaulting to USDT
 
   @@map("groups")
 }

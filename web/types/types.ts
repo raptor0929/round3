@@ -2,13 +2,14 @@ export interface IMembers {
   walletMemberId: string;
   position: number;
 }
+
 export interface IRoundGroup {
   groupId: string;
   name: string;
   amount: number;
   numberOfMembers: number;
   frequency: string;
-  coin: 'USDT' | 'BTC' | 'SOL';
+  coin: 'USDC' | 'BTC' | 'SOL';
   startDate: string;
   type: 'PRIVATE' | 'PUBLIC';
   members: IMembers[];
@@ -29,7 +30,7 @@ export interface IGroup {
   startDate: string;
   nextPayee?: string; // IGroupMembership.id
   groupContractAddress: string;
-  token: 'USDT' | 'BTC' | 'SOL';
+  token: 'USDC' | 'BTC' | 'SOL';
 }
 
 export interface IGroupMembership {
@@ -38,8 +39,9 @@ export interface IGroupMembership {
   updatedAt: Date;
   userId: string;
   groupId: string;
-  role: 'MEMBER' | 'ADMIN';
+  amountOwed: number;
   groupPosition: number;
+  role: 'MEMBER' | 'ADMIN';
   contributions: IContribution[];
 }
 
