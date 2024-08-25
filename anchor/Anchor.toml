@@ -5,14 +5,14 @@ anchor_version = "0.29.0"
 seeds = false
 skip-lint = false
 
-[programs.localnet]
+[programs.devnet]
 round3 = "9srbzKr5hQQ2nbPiW1y9UK9yTEffBW9HrgF7EhKLwdCb"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

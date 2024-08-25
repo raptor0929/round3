@@ -8,7 +8,7 @@ import type { Round3 } from '../target/types/round3';
 export { Round3, Round3IDL };
 
 // The programId is imported from the program IDL.
-export const ROUND3_PROGRAM_ID = new PublicKey(Round3IDL.address);
+export const ROUND3_PROGRAM_ID = new PublicKey(Round3IDL.metadata.address);
 
 // This is a helper function to get the Round3 Anchor program.
 export function getRound3Program(provider: AnchorProvider) {

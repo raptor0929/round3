@@ -20,6 +20,7 @@ done
 PROGRAM_NAME="round3"
 PROGRAM_KEYPAIR="deploy-keypair.json"
 TOKEN_KEYPAIR="token-keypair.json"
+ROUND_KEYPAIR="round-keypair.json"
 TOKEN_NAME="StableCoinToken"
 TOKEN_DECIMALS=6
 INITIALIZER_AMOUNT=1000000000 # 1000 tokens with 6 decimals
@@ -28,7 +29,7 @@ CONFIG_FILE="deployment_config.json"
 # Ensure we're on devnet
 solana config set --url https://api.devnet.solana.com
 
-# Check if keypair exists, if not create it
+# Check if program keypair exists, if not create it
 if [ ! -f "$PROGRAM_KEYPAIR" ]; then
     solana-keygen new --no-bip39-passphrase -o "$PROGRAM_KEYPAIR"
 fi
@@ -54,7 +55,8 @@ anchor deploy --provider.cluster devnet --program-keypair "$PROGRAM_KEYPAIR" --p
 # Check if config file exists
 if [ -f "$CONFIG_FILE" ]; then
     echo "Loading existing configuration..."
-    TOKEN_ADDRESS=$(jq -r .token_address "$CONFIG_FILE")
+    TOKEN_ADDRESS="4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"
+    #TOKEN_ADDRESS=$(jq -r .token_address "$CONFIG_FILE")
     INITIALIZER_TOKEN_ACCOUNT=$(jq -r .initializer_token_account "$CONFIG_FILE")
 else
     echo "No existing configuration found. Creating new token..."
@@ -73,10 +75,19 @@ else
 
     # Mint initial tokens to the initializer's account
     spl-token mint "$TOKEN_ADDRESS" $INITIALIZER_AMOUNT "$INITIALIZER_TOKEN_ACCOUNT"
-
-    # Save configuration
-    echo "{\"token_address\": \"$TOKEN_ADDRESS\", \"initializer_token_account\": \"$INITIALIZER_TOKEN_ACCOUNT\"}" > "$CONFIG_FILE"
 fi
+
+# Create a new roundAccount
+solana-keygen new --no-bip39-passphrase -o "$ROUND_KEYPAIR"
+ROUND_ACCOUNT=$(solana-keygen pubkey "$ROUND_KEYPAIR")
+echo "Round Account: $ROUND_ACCOUNT"
+
+# Save configuration
+echo "{
+  \"token_address\": \"$TOKEN_ADDRESS\",
+  \"initializer_token_account\": \"$INITIALIZER_TOKEN_ACCOUNT\",
+  \"round_account\": \"$ROUND_ACCOUNT\"
+}" > "$CONFIG_FILE"
 
 # Output important addresses
 echo "
@@ -85,12 +96,14 @@ Deployment Summary:
 Program ID: $PROGRAM_ID
 Token Address: $TOKEN_ADDRESS
 Initializer Token Account: $INITIALIZER_TOKEN_ACCOUNT
+Round Account: $ROUND_ACCOUNT
 "
 
 # Update React component with new addresses
 sed -i.bak "s/const programId = new PublicKey('.*')/const programId = new PublicKey('$PROGRAM_ID')/" ../web/components/round3/InitializeRound.tsx
 sed -i.bak "s/const tokenMint = new PublicKey('.*')/const tokenMint = new PublicKey('$TOKEN_ADDRESS')/" ../web/components/round3/InitializeRound.tsx
 sed -i.bak "s/const initializerTokenAccount = new PublicKey('.*')/const initializerTokenAccount = new PublicKey('$INITIALIZER_TOKEN_ACCOUNT')/" ../web/components/round3/InitializeRound.tsx
+sed -i.bak "s/const roundAccount = new PublicKey('.*')/const roundAccount = new PublicKey('$ROUND_ACCOUNT')/" ../web/components/round3/InitializeRound.tsx
 rm ../web/components/round3/InitializeRound.tsx.bak
 
 echo "React component updated with new addresses."
