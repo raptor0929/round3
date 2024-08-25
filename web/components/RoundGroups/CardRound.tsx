@@ -18,12 +18,10 @@ import {
 import { IGroup } from '@/types/types';
 import TablePayments from './TablePayments';
 import { useMembership } from '@/hooks/useMembership';
-import { useContributions } from '@/hooks/useContributions';
 
 export default function CardRound({ group }: { group: IGroup }) {
   const { isOpen, onOpenChange } = useDisclosure();
   const { allMemberships } = useMembership(group.id);
-  const { groupContributions, makePayment } = useContributions(group.id);
 
   return (
     <>
@@ -51,7 +49,7 @@ export default function CardRound({ group }: { group: IGroup }) {
                 <strong>Frequency:</strong> {group.paymentFrequency}
               </p>
               <p>
-                <strong>Members:</strong> {group.maximumMembers}
+                <strong>Maximum Members:</strong> {group.maximumMembers}
               </p>
             </div>
           </CardFooter>
@@ -154,8 +152,7 @@ export default function CardRound({ group }: { group: IGroup }) {
                   <TablePayments
                     members={allMemberships}
                     token={group.token}
-                    contributions={groupContributions}
-                    onClickPay={makePayment}
+                    groupId={group.id}
                   />
                 )}
               </ModalBody>

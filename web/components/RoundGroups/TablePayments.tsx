@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Button } from '@nextui-org/react';
 import { IContribution, IGroupMembership } from '@/types/types'; // Assume this is your type for group members
 import { useSession } from 'next-auth/react';
+import { useContributions } from '@/hooks/useContributions';
 
 // Utility function to truncate userId
 const truncateId = (id: string) => {
@@ -12,15 +13,16 @@ const truncateId = (id: string) => {
 export default function TablePayments({
   members,
   token,
-  contributions,
-  onClickPay,
+  groupId,
 }: {
   members: IGroupMembership[];
   token: string;
-  contributions: IContribution[];
-  onClickPay: (amount: number) => Promise<void>;
+  groupId: string;
 }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const { groupContributions: contributions, makePayment } =
+    useContributions(groupId);
 
   const { data: session } = useSession();
   const userId = session?.user?.id;
@@ -28,7 +30,7 @@ export default function TablePayments({
   const onPayPress = useCallback(async (amount: number) => {
     setLoading(true);
     try {
-      await onClickPay(amount);
+      await makePayment(amount);
     } catch (error) {
       console.error('Error in making payment:', error);
     } finally {
@@ -65,7 +67,7 @@ export default function TablePayments({
               <Button
                 color="primary"
                 isLoading={loading}
-                disabled={connectedUser.amountOwed === 0}
+                isDisabled={connectedUser.amountOwed === 0}
                 onPress={() => onPayPress(connectedUser.amountOwed)}
               >
                 Pay
