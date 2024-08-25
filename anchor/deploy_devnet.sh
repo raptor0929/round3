@@ -20,7 +20,7 @@ done
 PROGRAM_NAME="round3"
 PROGRAM_KEYPAIR="deploy-keypair.json"
 TOKEN_KEYPAIR="token-keypair.json"
-TOKEN_NAME="Round3Token"
+TOKEN_NAME="StableCoinToken"
 TOKEN_DECIMALS=6
 INITIALIZER_AMOUNT=1000000000 # 1000 tokens with 6 decimals
 CONFIG_FILE="deployment_config.json"
@@ -49,7 +49,7 @@ rm programs/$PROGRAM_NAME/src/lib.rs.bak
 anchor build
 
 # Deploy the program
-anchor deploy --provider.cluster devnet --program-keypair "$PROGRAM_KEYPAIR"
+anchor deploy --provider.cluster devnet --program-keypair "$PROGRAM_KEYPAIR" --program-name "$PROGRAM_NAME"
 
 # Check if config file exists
 if [ -f "$CONFIG_FILE" ]; then
@@ -88,10 +88,10 @@ Initializer Token Account: $INITIALIZER_TOKEN_ACCOUNT
 "
 
 # Update React component with new addresses
-sed -i.bak "s/const programId = new PublicKey('.*')/const programId = new PublicKey('$PROGRAM_ID')/" ../web/components/round3/InitializeRoundComponent.tsx
-sed -i.bak "s/const tokenMint = new PublicKey('.*')/const tokenMint = new PublicKey('$TOKEN_ADDRESS')/" ../web/components/round3/InitializeRoundComponent.tsx
-sed -i.bak "s/const initializerTokenAccount = new PublicKey('.*')/const initializerTokenAccount = new PublicKey('$INITIALIZER_TOKEN_ACCOUNT')/" ../web/components/round3/InitializeRoundComponent.tsx
-rm ../web/components/round3/InitializeRoundComponent.tsx.bak
+sed -i.bak "s/const programId = new PublicKey('.*')/const programId = new PublicKey('$PROGRAM_ID')/" ../web/components/round3/InitializeRound.tsx
+sed -i.bak "s/const tokenMint = new PublicKey('.*')/const tokenMint = new PublicKey('$TOKEN_ADDRESS')/" ../web/components/round3/InitializeRound.tsx
+sed -i.bak "s/const initializerTokenAccount = new PublicKey('.*')/const initializerTokenAccount = new PublicKey('$INITIALIZER_TOKEN_ACCOUNT')/" ../web/components/round3/InitializeRound.tsx
+rm ../web/components/round3/InitializeRound.tsx.bak
 
 echo "React component updated with new addresses."
 
