@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { leaveGroup } from '@/services/groupService';
+import { leaveGroup } from '@/services/membershipService';
 
 export async function DELETE(request: Request) {
   try {

@@ -8,6 +8,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Persist the user information in the token
       if (user) {
         token.id = user.id;
+        // @ts-expect-error walletAddress is not part of the user type
         token.walletAddress = user.walletAddress;
       }
       return token;
@@ -15,6 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
+        // @ts-expect-error walletAddress is not part of the token type
         session.user.walletAddress = token.walletAddress as string;
       }
       return session;

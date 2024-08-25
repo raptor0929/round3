@@ -8,8 +8,8 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Image,
   Input,
+  SharedSelection,
   Switch,
   Textarea,
   useDisclosure,
@@ -38,13 +38,11 @@ const NewGroupForm = () => {
     setNameOfGroup(e.target.value);
   };
 
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
 
-  const handleNumberOfMembersChange = (keys: React.Key[]) => {
+  const handleNumberOfMembersChange = (keys: SharedSelection) => {
     const selectedKey = Array.from(keys).join('');
     setNumberOfMembers(selectedKey);
   };
@@ -55,9 +53,9 @@ const NewGroupForm = () => {
     setFoundingAmount(e.target.value);
   };
 
-  const handlePaymentFrequencyChange = (keys: React.Key[]) => {
+  const handlePaymentFrequencyChange = (keys: SharedSelection) => {
     const selectedKey = Array.from(keys).join('');
-    setPaymentFrequency(selectedKey);
+    setPaymentFrequency(selectedKey as 'WEEKLY' | 'MONTHLY');
   };
 
   const handleTypeOfGroupChange = (isPublic: boolean) => {
@@ -68,7 +66,7 @@ const NewGroupForm = () => {
     setStartDate(date);
   };
 
-  const handleTokenChange = (keys: React.Key[]) => {
+  const handleTokenChange = (keys: SharedSelection) => {
     const selectedKey = Array.from(keys).join('');
     setToken(selectedKey);
   };

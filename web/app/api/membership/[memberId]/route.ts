@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { findGroupMembership } from '@/services/groupService';
+import { findGroupMembership } from '@/services/membershipService';
 import { NextRequest } from 'next/server';
 
 export async function GET(

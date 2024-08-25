@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { joinGroup } from '@/services/groupService';
+import { joinGroup } from '@/services/membershipService';
 
 export async function POST(request: Request) {
   try {
