@@ -88,10 +88,10 @@ Initializer Token Account: $INITIALIZER_TOKEN_ACCOUNT
 "
 
 # Update React component with new addresses
-sed -i.bak "s/const programId = new PublicKey('.*')/const programId = new PublicKey('$PROGRAM_ID')/" ../web/app/src/InitializeRoundComponent.js
-sed -i.bak "s/const tokenMint = new PublicKey('.*')/const tokenMint = new PublicKey('$TOKEN_ADDRESS')/" ../web//src/InitializeRoundComponent.js
-sed -i.bak "s/const initializerTokenAccount = new PublicKey('.*')/const initializerTokenAccount = new PublicKey('$INITIALIZER_TOKEN_ACCOUNT')/" ../web//src/InitializeRoundComponent.js
-rm src/InitializeRoundComponent.js.bak
+sed -i.bak "s/const programId = new PublicKey('.*')/const programId = new PublicKey('$PROGRAM_ID')/" ../web/components/round3/InitializeRoundComponent.tsx
+sed -i.bak "s/const tokenMint = new PublicKey('.*')/const tokenMint = new PublicKey('$TOKEN_ADDRESS')/" ../web/components/round3/InitializeRoundComponent.tsx
+sed -i.bak "s/const initializerTokenAccount = new PublicKey('.*')/const initializerTokenAccount = new PublicKey('$INITIALIZER_TOKEN_ACCOUNT')/" ../web/components/round3/InitializeRoundComponent.tsx
+rm ../web/components/round3/InitializeRoundComponent.tsx.bak
 
 echo "React component updated with new addresses."
 
