@@ -1,100 +1,92 @@
 import * as anchor from '@coral-xyz/anchor';
 import { Program } from '@coral-xyz/anchor';
-import { Keypair } from '@solana/web3.js';
+import { Keypair, PublicKey } from '@solana/web3.js';
 import { Round3 } from '../target/types/round3';
+import { TOKEN_PROGRAM_ID, createMint, createAccount, mintTo } from '@solana/spl-token';
 
 describe('round3', () => {
-  // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env();
+  const provider = anchor.AnchorProvider.local();
   anchor.setProvider(provider);
   const payer = provider.wallet as anchor.Wallet;
 
   const program = anchor.workspace.Round3 as Program<Round3>;
 
-  const round3Keypair = Keypair.generate();
+  const roundKeypair = Keypair.generate();
+  let tokenMint: PublicKey;
+  let initializerTokenAccount: PublicKey;
+  let roundTokenAccount: PublicKey;
 
-  it('Initialize Round3', async () => {
-    await program.methods
-      .initialize()
-      .accounts({
-        round3: round3Keypair.publicKey,
-        payer: payer.publicKey,
-      })
-      .signers([round3Keypair])
-      .rpc();
-
-    const currentCount = await program.account.round3.fetch(
-      round3Keypair.publicKey
+  beforeAll(async () => {
+    // Create a new token mint
+    tokenMint = await createMint(
+      provider.connection,
+      payer.payer,
+      payer.publicKey,
+      null,
+      6 // 6 decimals
     );
 
-    expect(currentCount.count).toEqual(0);
+    // Create token accounts
+    initializerTokenAccount = await createAccount(
+      provider.connection,
+      payer.payer,
+      tokenMint,
+      payer.publicKey
+    );
+
+    roundTokenAccount = await createAccount(
+      provider.connection,
+      payer.payer,
+      tokenMint,
+      roundKeypair.publicKey
+    );
+
+    // Mint tokens to the initializer's account
+    await mintTo(
+      provider.connection,
+      payer.payer,
+      tokenMint,
+      initializerTokenAccount,
+      payer.publicKey,
+      5000000 // Mint 5 tokens (assuming 6 decimals)
+    );
   });
 
-  it('Increment Round3', async () => {
-    await program.methods
-      .increment()
-      .accounts({ round3: round3Keypair.publicKey })
-      .rpc();
+  it('Initialize Round', async () => {
+    const paymentAmount = new anchor.BN(1000000); // 1 token
+    const numberOfPlayers = 5;
+    const frequencyOfTurns = new anchor.BN(86400); // 1 day in seconds
 
-    const currentCount = await program.account.round3.fetch(
-      round3Keypair.publicKey
-    );
+    try {
+      await program.methods
+        .initializeRound(paymentAmount, numberOfPlayers, frequencyOfTurns)
+        .accounts({
+          round: roundKeypair.publicKey,
+          initializer: payer.publicKey,
+          tokenMint: tokenMint,
+          initializerTokenAccount: initializerTokenAccount,
+          roundTokenAccount: roundTokenAccount,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([roundKeypair])
+        .rpc();
 
-    expect(currentCount.count).toEqual(1);
-  });
+      const roundAccount = await program.account.round.fetch(roundKeypair.publicKey);
 
-  it('Increment Round3 Again', async () => {
-    await program.methods
-      .increment()
-      .accounts({ round3: round3Keypair.publicKey })
-      .rpc();
-
-    const currentCount = await program.account.round3.fetch(
-      round3Keypair.publicKey
-    );
-
-    expect(currentCount.count).toEqual(2);
-  });
-
-  it('Decrement Round3', async () => {
-    await program.methods
-      .decrement()
-      .accounts({ round3: round3Keypair.publicKey })
-      .rpc();
-
-    const currentCount = await program.account.round3.fetch(
-      round3Keypair.publicKey
-    );
-
-    expect(currentCount.count).toEqual(1);
-  });
-
-  it('Set round3 value', async () => {
-    await program.methods
-      .set(42)
-      .accounts({ round3: round3Keypair.publicKey })
-      .rpc();
-
-    const currentCount = await program.account.round3.fetch(
-      round3Keypair.publicKey
-    );
-
-    expect(currentCount.count).toEqual(42);
-  });
-
-  it('Set close the round3 account', async () => {
-    await program.methods
-      .close()
-      .accounts({
-        payer: payer.publicKey,
-        round3: round3Keypair.publicKey,
-      })
-      .rpc();
-
-    // The account should no longer exist, returning null.
-    const userAccount = await program.account.round3.fetchNullable(
-      round3Keypair.publicKey
-    );
-    expect(userAccount).toBeNull();
+      expect(roundAccount.paymentAmount.toNumber()).toEqual(1000000);
+      expect(roundAccount.numberOfPlayers).toEqual(5);
+      expect(roundAccount.currentIndexOfPlayer).toEqual(0);
+      expect(roundAccount.totalAmountLocked.toNumber()).toEqual(5000000); // 5 tokens
+      expect(roundAccount.availableSlots).toEqual(4);
+      expect(roundAccount.frequencyOfTurns.toNumber()).toEqual(86400);
+      expect(roundAccount.status).toEqual({ pending: {} });
+      expect(roundAccount.tokenMint.toBase58()).toEqual(tokenMint.toBase58());
+      expect(roundAccount.players[0].toBase58()).toEqual(payer.publicKey.toBase58());
+      expect(roundAccount.orderOfTurns[0].toBase58()).toEqual(payer.publicKey.toBase58());
+    } catch (error) {
+      console.error('Detailed error:', error);
+      throw error; // Re-throw the error to fail the test
+    }
   });
 });

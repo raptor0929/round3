@@ -1,112 +1,439 @@
-/**
- * Program IDL in camelCase format in order to be used in JS/TS.
- *
- * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/round3.json`.
- */
 export type Round3 = {
-  address: '5BFX4Zoj2NwRB6MheKbo9TpvTpQvocEJkPbWk8PQFwpc';
-  metadata: {
-    name: 'round3';
-    version: '0.1.0';
-    spec: '0.1.0';
-    description: 'Created with Anchor';
-  };
-  instructions: [
+  "version": "0.1.0",
+  "name": "round3",
+  "instructions": [
     {
-      name: 'close';
-      discriminator: [98, 165, 201, 177, 108, 65, 206, 96];
-      accounts: [
+      "name": "initializeRound",
+      "accounts": [
         {
-          name: 'payer';
-          writable: true;
-          signer: true;
+          "name": "round",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'round3';
-          writable: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: 'decrement';
-      discriminator: [106, 227, 168, 59, 248, 27, 150, 101];
-      accounts: [
-        {
-          name: 'round3';
-          writable: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: 'increment';
-      discriminator: [11, 18, 104, 9, 104, 174, 59, 33];
-      accounts: [
-        {
-          name: 'round3';
-          writable: true;
-        }
-      ];
-      args: [];
-    },
-    {
-      name: 'initialize';
-      discriminator: [175, 175, 109, 31, 13, 152, 155, 237];
-      accounts: [
-        {
-          name: 'payer';
-          writable: true;
-          signer: true;
+          "name": "initializer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: 'round3';
-          writable: true;
-          signer: true;
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: 'systemProgram';
-          address: '11111111111111111111111111111111';
+          "name": "initializerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": [
+        {
+          "name": "paymentAmount",
+          "type": "u64"
+        },
+        {
+          "name": "numberOfPlayers",
+          "type": "u8"
+        },
+        {
+          "name": "frequencyOfTurns",
+          "type": "i64"
+        }
+      ]
     },
     {
-      name: 'set';
-      discriminator: [198, 51, 53, 241, 116, 29, 126, 194];
-      accounts: [
+      "name": "addPlayer",
+      "accounts": [
         {
-          name: 'round3';
-          writable: true;
-        }
-      ];
-      args: [
+          "name": "round",
+          "isMut": true,
+          "isSigner": false
+        },
         {
-          name: 'value';
-          type: 'u8';
+          "name": "player",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "playerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
+      ],
+      "args": []
+    },
+    {
+      "name": "payTurn",
+      "accounts": [
+        {
+          "name": "round",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recipientTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
-  ];
-  accounts: [
+  ],
+  "accounts": [
     {
-      name: 'round3';
-      discriminator: [135, 64, 223, 168, 233, 143, 162, 215];
-    }
-  ];
-  types: [
-    {
-      name: 'round3';
-      type: {
-        kind: 'struct';
-        fields: [
+      "name": "round",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: 'count';
-            type: 'u8';
+            "name": "paymentAmount",
+            "type": "u64"
+          },
+          {
+            "name": "tokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "numberOfPlayers",
+            "type": "u8"
+          },
+          {
+            "name": "players",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "currentIndexOfPlayer",
+            "type": "u8"
+          },
+          {
+            "name": "orderOfTurns",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "totalAmountLocked",
+            "type": "u64"
+          },
+          {
+            "name": "availableSlots",
+            "type": "u8"
+          },
+          {
+            "name": "frequencyOfTurns",
+            "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "RoundStatus"
+            }
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
+  ],
+  "types": [
+    {
+      "name": "RoundStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Completed"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "RoundNotPending",
+      "msg": "The round is not in pending status"
+    },
+    {
+      "code": 6001,
+      "name": "RoundFull",
+      "msg": "The round is full"
+    },
+    {
+      "code": 6002,
+      "name": "RoundNotActive",
+      "msg": "The round is not active"
+    },
+    {
+      "code": 6003,
+      "name": "NotPlayersTurn",
+      "msg": "It's not this player's turn to pay"
+    }
+  ]
+};
+
+export const IDL: Round3 = {
+  "version": "0.1.0",
+  "name": "round3",
+  "instructions": [
+    {
+      "name": "initializeRound",
+      "accounts": [
+        {
+          "name": "round",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "initializer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "initializerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "paymentAmount",
+          "type": "u64"
+        },
+        {
+          "name": "numberOfPlayers",
+          "type": "u8"
+        },
+        {
+          "name": "frequencyOfTurns",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "addPlayer",
+      "accounts": [
+        {
+          "name": "round",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "playerTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "payTurn",
+      "accounts": [
+        {
+          "name": "round",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "roundTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recipientTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "round",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "paymentAmount",
+            "type": "u64"
+          },
+          {
+            "name": "tokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "numberOfPlayers",
+            "type": "u8"
+          },
+          {
+            "name": "players",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "currentIndexOfPlayer",
+            "type": "u8"
+          },
+          {
+            "name": "orderOfTurns",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "totalAmountLocked",
+            "type": "u64"
+          },
+          {
+            "name": "availableSlots",
+            "type": "u8"
+          },
+          {
+            "name": "frequencyOfTurns",
+            "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "RoundStatus"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "RoundStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Active"
+          },
+          {
+            "name": "Completed"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "RoundNotPending",
+      "msg": "The round is not in pending status"
+    },
+    {
+      "code": 6001,
+      "name": "RoundFull",
+      "msg": "The round is full"
+    },
+    {
+      "code": 6002,
+      "name": "RoundNotActive",
+      "msg": "The round is not active"
+    },
+    {
+      "code": 6003,
+      "name": "NotPlayersTurn",
+      "msg": "It's not this player's turn to pay"
+    }
+  ]
 };
