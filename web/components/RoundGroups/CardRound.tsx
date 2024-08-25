@@ -66,12 +66,13 @@ export default function CardRound({ group }: { group: IGroup }) {
         size={'2xl'}
         className=""
       >
-        <ModalContent className="">
+        <ModalContent className="pt-2">
           {(onClose) => (
             <>
               <ModalHeader className="flex gap-2 text-3xl justify-between items-center">
                 {group.title}
                 <Chip
+                  style={{ color: 'white' }}
                   color={
                     group.status === 'ACTIVE'
                       ? 'success'
