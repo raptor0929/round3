@@ -14,6 +14,7 @@ export interface IRoundGroup {
   type: 'PRIVATE' | 'PUBLIC';
   members: IMembers[];
   status: 'RUNNING' | 'WAITING' | 'ENDING';
+  description?: string;
 }
 
 export interface IGroup {

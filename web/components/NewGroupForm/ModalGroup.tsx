@@ -51,24 +51,21 @@ export default function ModalGroup({
   };
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
+      <ModalContent className="p-4">
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Group Information
+            <ModalHeader className="flex flex-col gap-2 text-3xl">
+              Round Information
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className="text-lg">
               <p>
                 <strong>Name of the group:</strong> {groupName}
               </p>
               <p>
-                <strong>Description:</strong> {description}
+                <strong>Funding Amount:</strong> {fundingAmount}
               </p>
               <p>
                 <strong>Number of Members:</strong> {numberOfMembers}
-              </p>
-              <p>
-                <strong>Funding Amount:</strong> {fundingAmount}
               </p>
               <p>
                 <strong>Payment Frequency:</strong> {paymentFrequency}
@@ -83,12 +80,11 @@ export default function ModalGroup({
               <p>
                 <strong>Token:</strong> {token}
               </p>
+              <p>
+                <strong>Description:</strong> {description}
+              </p>
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
-              </Button>
-
               <Button
                 color="primary"
                 onPress={() => {
@@ -96,7 +92,7 @@ export default function ModalGroup({
                   onClose();
                 }}
               >
-                <Link href="/your-groups">Confirm</Link>
+                <Link href="/your-groups">CONFIRM</Link>
               </Button>
             </ModalFooter>
           </>

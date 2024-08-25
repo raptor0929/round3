@@ -1,32 +1,29 @@
 'use client';
 
 import BodyLayout from '@/components/LayoutComponent/BodyLayout';
+import CardRound from '@/components/RoundGroups/CardRound';
 import { useGroups } from '@/hooks/useGroups';
-import { Modal, ModalContent, Spinner } from '@nextui-org/react';
+import { useRoundGroups } from '@/hooks/useRoundGroups';
+import { Modal, ModalContent, Skeleton, Spinner } from '@nextui-org/react';
 import React from 'react';
 
 const Page = () => {
-  const { groups, loading: loadingGroups } = useGroups();
+  // const { groups, loading } = useGroups();
+  const { roundGroups, loading, error } = useRoundGroups();
 
   return (
-    <BodyLayout title="Find Groups">
-      {!loadingGroups && groups.length === 0 ? (
-        <p>No groups found</p>
-      ) : (
-        <ul>
-          {groups.map((group) => (
-            <li key={group.id}>{group.title}</li>
+    <div className="h-full w-full relative">
+      <div className="h-full px-14 py-8 ">
+        <h2 className="text-7xl h-1/5 font-bold font-sans flex items-center">
+          Find Rounds
+        </h2>
+        <div className="flex flex-wrap gap-4">
+          {roundGroups.map((group, index) => (
+            <CardRound key={index} group={group} />
           ))}
-        </ul>
-      )}
-      {loadingGroups && (
-        <Modal isOpen={loadingGroups} hideCloseButton>
-          <ModalContent className="bg-transparent border-none shadow-none">
-            <Spinner />
-          </ModalContent>
-        </Modal>
-      )}
-    </BodyLayout>
+        </div>
+      </div>
+    </div>
   );
 };
 
