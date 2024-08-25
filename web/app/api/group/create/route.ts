@@ -17,7 +17,6 @@ export async function POST(request: Request) {
       fundingAmount,
       paymentFrequency,
       isPublic,
-      startDate,
       token,
     } = await request.json();
 
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
       !title ||
       !fundingAmount ||
       !maximumMembers ||
-      !startDate ||
       !paymentFrequency ||
       !token ||
       isPublic === undefined
@@ -37,17 +35,16 @@ export async function POST(request: Request) {
     }
 
     const group = await createGroup({
+      token,
       title,
+      userId,
       description,
-      maximumMembers,
       fundingAmount,
+      maximumMembers,
       paymentFrequency,
       public: isPublic,
-      startDate: new Date(startDate),
+      startDate: new Date(),
       groupContractAddress: '0x0', // TODO: Get contract address
-      token,
-      groupPosition: 0,
-      userId,
     });
 
     return NextResponse.json({ group }, { status: 201 });
