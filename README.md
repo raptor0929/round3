@@ -1,4 +1,4 @@
-# round3
+# Round3 - Decentralized Savings and Investment Platform
 
 This project is generated with the [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) generator.
 
@@ -39,58 +39,41 @@ npm run dev
 
 This is a Solana program written in Rust using the Anchor framework.
 
-#### Commands
+## Introduction
 
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the command with `npm run`, eg: `npm run anchor`.
+In Argentina and across Latin America, financial exclusion is rampant. High poverty rates, lack of trust in banks, and limited access to financial services hinder people from saving, investing, and building wealth. _Round3_ is here to change that.
 
-#### Sync the program id:
+## The Problem
 
-Running this command will create a new keypair in the `anchor/target/deploy` directory and save the address to the Anchor config file and update the `declare_id!` macro in the `./src/lib.rs` file of the program.
+### Financial Exclusion Crisis
 
-You will manually need to update the constant in `anchor/lib/counter-exports.ts` to match the new program id.
+50% Poverty Rate: Half the population in Argentina struggles below the poverty line, making traditional financial services inaccessible.
+High Borrowing Costs: Exorbitant interest rates burden those in need of credit, while savings options yield minimal returns.
+Distrust in Institutions: Economic instability has eroded trust in banks and financial institutions.
 
-```shell
-npm run anchor keys sync
-```
+## Our Solution
 
-#### Build the program:
+ROUND3 is a decentralized savings and investment protocol inspired by Andes savings circles. Utilizing blockchain technology and smart contracts, ROUND3 creates a secure, community-driven platform for collective financial growth.
 
-```shell
-npm run anchor-build
-```
+## How It Works
 
-#### Start the test validator with the program deployed:
+- Create Savings Rounds: Users form groups, agreeing on contribution amounts and frequency.
+- Stake Collateral: Participants stake collateral in a smart contract (e.g., $80 for $20 monthly contribution).
+- Generate Yield: Collateral is invested in secure protocols (e.g., Solend), earning competitive returns (11%+ APY).
+- Contribute & Withdraw: Regular contributions are made, and yields are accessible once criteria are met.
 
-```shell
-npm run anchor-localnet
-```
+## Market Opportunity
 
-#### Run the tests
+- Superior Returns: Round3 aims for ~17% APY compared to traditional savings options of 5-12%.
+- Decentralized Trust: Smart contracts automate and secure transactions, minimizing fraud and intermediary costs.
+- Inclusive Access: Bridges the gap for those excluded from conventional banking, fostering financial inclusion.
 
-```shell
-npm run anchor-test
-```
+## Future Opportunities
 
-#### Deploy to Devnet
+- Credit Building: Users can build a credit history within Round3, unlocking more financial opportunities.
+- DeFi Retirement Funds: Potential to develop decentralized, community-managed retirement solutions.
+- Innovative Financial Tools: Round3 can lead to new decentralized financial applications, enhancing security and inclusion.
 
-```shell
-npm run anchor deploy --provider.cluster devnet
-```
+## Conclusion
 
-### web
-
-This is a React app that uses the Anchor generated client to interact with the Solana program.
-
-#### Commands
-
-Start the web app
-
-```shell
-npm run dev
-```
-
-Build the web app
-
-```shell
-npm run build
-```
+We are redefining financial inclusion and empowerment in Latin America. With Round3, individuals can save, invest, and thrive in a community-driven, blockchain-based system. Let's build a financially independent future together
