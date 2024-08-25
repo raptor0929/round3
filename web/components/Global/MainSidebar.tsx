@@ -9,27 +9,27 @@ const MainSidebar = () => {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: 'New Group', icon: <FaPlus />, path: '/new-group' },
-    { name: 'Your Groups', icon: <FaUsers />, path: '/your-groups' },
-    { name: 'Find Groups', icon: <FaSearch />, path: '/find-groups' },
+    { name: 'New Round', icon: <FaPlus />, path: '/new-group' },
+    { name: 'Your Rounds', icon: <FaUsers />, path: '/your-groups' },
+    { name: 'Find Rounds', icon: <FaSearch />, path: '/find-groups' },
   ];
 
   return (
     <div className="bg-blueBackground h-full flex flex-col">
       <Logo />
       <div className="flex flex-col gap-2 h-full text-white">
-        <ul>
+        <ul className="font-sans">
           {menuItems.map((item) => (
             <Link
               key={item.name}
-              className={`flex items-center my-2 mx-6 p-3 rounded-lg cursor-pointer ${
+              className={`flex items-center my-4 mx-6 p-3 rounded-lg cursor-pointer ${
                 pathname === item.path ? 'bg-primaryOutline' : ''
               }`}
               href={item.path}
             >
               <span className="mr-2">{item.icon}</span>
               <span
-                className={`text-lg  ${
+                className={`text-2xl  ${
                   pathname === item.path ? 'font-bold' : ''
                 }`}
               >

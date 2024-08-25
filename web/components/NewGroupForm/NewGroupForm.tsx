@@ -79,15 +79,8 @@ const NewGroupForm = () => {
 
   return (
     <div className="flex w-full p-2 h-full gap-4">
-      <div className="relative h-full w-1/2 ">
-        <div
-          className="absolute w-full h-full p-14  bg-no-repeat bg-cover rounded-lg"
-          style={{
-            backgroundImage: `url('./images/fondo01.jpg')`,
-            filter: 'blur(4px)',
-          }}
-        ></div>
-        <div className="relative flex flex-col px-10 w-full gap-1 justify-center h-full">
+      <div className="h-full w-1/2 ">
+        <div className="h-full px-14 py-8">
           <h2 className="text-7xl h-1/5 font-bold font-sans flex items-center">
             New Round
           </h2>
@@ -102,7 +95,7 @@ const NewGroupForm = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white h-full w-1/2 py-24 px-28 rounded-lg grid grid-cols-2">
+      <div className="bg-white h-full w-1/2 p-12 rounded-lg grid grid-cols-2">
         {/* <span className="text-black text-xl font-sans">Name of the group:</span> */}
         <Input
           type="text"
@@ -143,7 +136,6 @@ const NewGroupForm = () => {
             })}
           </DropdownMenu>
         </Dropdown>
-
         <span className="text-black text-xl font-sans">Payment Frequency:</span>
         <Dropdown>
           <DropdownTrigger>
