@@ -22,7 +22,7 @@ const InitializeRoundComponent = () => {
 
     const connection = new Connection('https://api.devnet.solana.com');
     const provider = new AnchorProvider(connection, wallet, {});
-    const programId = new PublicKey('9srbzKr5hQQ2nbPiW1y9UK9yTEffBW9HrgF7EhKLwdCb');
+    const programId = new PublicKey('5BFX4Zoj2NwRB6MheKbo9TpvTpQvocEJkPbWk8PQFwpc');
     const program = new Program(Round3IDL, programId, provider);
 
     const roundKeypair = Keypair.generate();
