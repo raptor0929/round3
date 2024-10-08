@@ -79,3 +79,15 @@ ROUND3 is a decentralized savings and investment protocol inspired by Andes savi
 ## Conclusion
 
 We are redefining financial inclusion and empowerment in Latin America. With Round3, individuals can save, invest, and thrive in a community-driven, blockchain-based system. Let's build a financially independent future together
+
+## Setup
+
+Add env variables to your .env file
+
+ANCHOR_PROVIDER_URL=https://api.devnet.solana.com
+ANCHOR_WALLET=<Your id.json file>
+
+- initialize round
+```shell
+npm run play
+```
